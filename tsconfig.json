@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    
+
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
