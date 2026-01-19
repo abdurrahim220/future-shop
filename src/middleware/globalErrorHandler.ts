@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
@@ -57,9 +58,9 @@ const globalErrorHandler: ErrorRequestHandler = (
     typeof err === "object" &&
     err !== null &&
     "code" in err &&
-    (err as MongoDuplicateKeyError).code === 11000
+    (err as unknown as MongoDuplicateKeyError).code === 11000
   ) {
-    const duplicateError = err as MongoDuplicateKeyError;
+    const duplicateError = err as unknown as MongoDuplicateKeyError;
     const key = Object.keys(duplicateError.keyValue)[0] || "unknown";
 
     statusCode = HTTP_STATUS.CONFLICT;
