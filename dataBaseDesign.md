@@ -11,9 +11,16 @@ name
 email
 phone
 password
+profileImage
 status: "active" | "blocked"
 createdAt
 updatedAt
+```
+- Address Table
+```
+first address
+second address
+contact number
 ```
 
 - Seller Table
@@ -61,6 +68,7 @@ name
 slug
 parentId (self FK)
 icon
+isActive
 createdAt
 updatedAt
 ```
@@ -72,6 +80,7 @@ _id (PK)
 name
 slug
 logo
+isActive
 createdAt
 updatedAt
 ```
@@ -85,33 +94,31 @@ categoryId
 brandId
 name
 slug
+sku
+stock
 description
-thumbnail
 images[]
 isVariable (boolean)
+variants:[
+  {
+    _id (PK)
+    sku
+    purchasePrice
+    salePrice
+    images[]
+    stock (optional fallback)
+    attributes: { size: "M", color: "Red" }
+    isDefault
+    createdAt
+    updatedAt
+  }
+]
 status: "active" | "inactive" | "pending"
 rating
 reviewCount
 salesCount
 createdAt
 updatedAt
-```
-
-- PRODUCT VARIANTS
-
-```
-_id (PK)
-productId
-sku
-price
-discountPrice
-stock (optional fallback)
-attributes: { size: "M", color: "Red" }
-isDefault
-status
-createdAt
-updatedAt
-
 ```
 
 ## 📦 INVENTORY & STOCK (Branch Based)
@@ -160,6 +167,7 @@ transferId
 productId
 variantId
 quantity
+createdAt
 ```
 
 ## 🛒 CART
@@ -219,17 +227,16 @@ Order
 -------
 _id
 customerId
+productId
 totalAmount
-commissionAmount
-sellerEarning
-status: "pending" | "paid" | "shipped" | "delivered" | "cancelled"
-paymentStatus
+status: "pending" | "shipped" | "delivered" | "cancelled"
+paymentStatus :"paid"|"unpaid"
+deliveryStatus:"home"|"cod"
 createdAt
 updatedAt
 ```
 
-- 1️⃣2️⃣ ORDER ITEMS
-
+- 1️⃣2️⃣ ORDER ITEMS/subOrder // visable for seller
 ```
 OrderItem
 ------------

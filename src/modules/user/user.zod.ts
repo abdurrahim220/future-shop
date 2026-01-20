@@ -23,7 +23,7 @@ export const createUserZodSchema = z.object({
         message: "Role must be one of: admin, seller, customer",
       })
       .default("customer")
-      .optional(), // usually not sent in registration (default is customer)
+      .optional(),
 
     status: z
       .enum(["active", "blocked"], {
@@ -39,7 +39,7 @@ export const updateUserZodSchema = z.object({
   body: z
     .object({
       name: z.string().min(2).optional(),
-      email: z.string().email().optional(),
+      email: z.email().optional(),
       phone: z.string().min(10).max(15).optional(),
       password: z.string().min(6).optional(),
       role: z.enum(["admin", "seller", "customer"]).optional(),

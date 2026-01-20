@@ -1,6 +1,5 @@
 import { Router } from "express";
 import UserController from "./user.controller";
-
 import UserService from "./user.services";
 import UserRepository from "./user.repository";
 import zodValidate from "../../middleware/zodValidate";
