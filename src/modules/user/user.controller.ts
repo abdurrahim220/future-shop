@@ -11,7 +11,7 @@ class UserController {
     const newUser = req.body;
     const result = await this.userService.createUser(newUser);
     sendResponse(res, {
-      statusCode: HTTP_STATUS.OK,
+      statusCode: HTTP_STATUS.CREATED,
       success: true,
       message: "User created successfully",
       data: result,
@@ -43,7 +43,7 @@ class UserController {
     const { id } = req.params;
     const result = await this.userService.updateUser(id as string, req.body);
     sendResponse(res, {
-      statusCode: HTTP_STATUS.OK,
+      statusCode: HTTP_STATUS.CREATED,
       success: true,
       message: "User updated successfully",
       data: result,

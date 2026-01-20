@@ -9,8 +9,8 @@ export type IUser = {
   password: string;
   passwordChangedAt?: Date;
   status?: "active" | "blocked";
-  otp?: string;
-  otpExpiry?: Date;
+  otp?: number;
+  otpExpires?: Date;
   createdAt?: string;
   updatedAt?: string;
 };
