@@ -7,7 +7,7 @@ export const createUserZodSchema = z.object({
       .string()
       .min(2, { message: "Name is required & must be at least 2 characters" }),
 
-    email: z.email({ message: "Valid email is required" }),
+    email: z.email({ message: "Enter a valid email" }),
 
     phone: z
       .string()
@@ -66,9 +66,19 @@ export const changePasswordZodSchema = z.object({
   }),
 });
 
+const verifyUserOtpZodSchema = z.object({
+  body: z.object({
+    otp: z
+      .number()
+      .min(6, { message: "Enter a valid OTP" })
+      .max(6, { message: "Enter a valid OTP" }),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
   updateUserZodSchema,
   loginUserZodSchema,
   changePasswordZodSchema,
+  verifyUserOtpZodSchema,
 };

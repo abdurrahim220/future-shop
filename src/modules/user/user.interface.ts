@@ -1,7 +1,7 @@
 import { Role } from "../../interface/Role";
 
 export type IUser = {
-  _id?: string;
+  _id: string;
   role: Role;
   name: string;
   email: string;
@@ -9,6 +9,7 @@ export type IUser = {
   password: string;
   passwordChangedAt?: Date;
   status?: "active" | "blocked";
+  isVerified?: boolean;
   otp?: number;
   otpExpires?: Date;
   createdAt?: string;

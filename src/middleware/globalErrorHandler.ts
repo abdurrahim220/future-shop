@@ -31,10 +31,18 @@ const globalErrorHandler: ErrorRequestHandler = (
   if (err instanceof ZodError) {
     statusCode = HTTP_STATUS.BAD_REQUEST;
     message = "Validation Error";
-    errorMessages = err.issues.map((issue) => ({
-      path: issue.path.join("."),
-      message: issue.message,
-    }));
+    errorMessages = err.issues.map((issue) => {
+      // Remove "body." prefix if it exists
+      let path = issue.path.join(".");
+      if (path.startsWith("body.")) {
+        path = path.slice(5); // remove "body."
+      }
+
+      return {
+        path,
+        message: issue.message,
+      };
+    });
   } else if (err instanceof mongoose.Error.ValidationError) {
     /* MONGOOSE VALIDATION ERROR */
     statusCode = HTTP_STATUS.BAD_REQUEST;

@@ -18,6 +18,17 @@ class UserController {
     });
   });
 
+  verifyUserOtp = asyncHandler(async (req: Request, res: Response) => {
+    const { otp } = req.body;
+    const result = await this.userService.verifyUserOtp(otp);
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "User verified successfully",
+      data: result,
+    });
+  });
+
   getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const result = await this.userService.findAllUsers();
     sendResponse(res, {

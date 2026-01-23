@@ -49,6 +49,10 @@ const UserSchema = new Schema(
     refreshTokenExpiresAt: {
       type: Date,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

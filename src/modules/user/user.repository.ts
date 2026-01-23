@@ -10,6 +10,25 @@ class UserRepository {
     return UserModel.create(data);
   }
 
+  findUserByOtp(otp: number) {
+    return UserModel.findOne({ otp });
+  }
+
+  verifyUserOtp(userId: string) {
+    return UserModel.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          isVerified: true,
+        },
+        $unset: {
+          otp: undefined,
+          otpExpires: undefined,
+        },
+      },
+    );
+  }
+
   findUserById(id: string) {
     return UserModel.findById(id);
   }
