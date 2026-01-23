@@ -68,10 +68,7 @@ export const changePasswordZodSchema = z.object({
 
 const verifyUserOtpZodSchema = z.object({
   body: z.object({
-    otp: z
-      .number()
-      .min(6, { message: "Enter a valid OTP" })
-      .max(6, { message: "Enter a valid OTP" }),
+    otp: z.number({ message: "Enter a valid OTP" }),
   }),
 });
 
