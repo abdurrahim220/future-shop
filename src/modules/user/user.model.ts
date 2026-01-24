@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import { UserDocument } from "./user.interface";
+import { UserDocument, UserModelType } from "./user.interface";
 import bcrypt from "bcryptjs";
-const UserSchema = new Schema<UserDocument>(
+const UserSchema = new Schema<UserDocument, UserModelType>(
   {
     name: {
       type: String,
@@ -89,4 +89,4 @@ UserSchema.index({ email: 1 });
 UserSchema.index({ name: 1 });
 UserSchema.index({ role: 1 });
 UserSchema.index({ createdAt: -1 });
-export const UserModel = model<UserDocument>("User", UserSchema);
+export const UserModel = model<UserDocument, UserModelType>("User", UserSchema);

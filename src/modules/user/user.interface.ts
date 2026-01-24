@@ -1,5 +1,5 @@
 import { Role } from "../../interface/Role";
-import { Document } from "mongoose";
+import { Document, Model } from "mongoose";
 
 export type IUser = {
   role: Role;
@@ -18,4 +18,10 @@ export type IUser = {
 };
 export interface UserDocument extends IUser, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
+}
+export interface UserModelType extends Model<UserDocument> {
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedAt: Date,
+    jwtIssuedAt: number,
+  ): boolean;
 }
