@@ -1,7 +1,7 @@
 import { Role } from "../../interface/Role";
+import { Document } from "mongoose";
 
 export type IUser = {
-  _id: string;
   role: Role;
   name: string;
   email: string;
@@ -12,6 +12,10 @@ export type IUser = {
   isVerified?: boolean;
   otp?: number;
   otpExpires?: Date;
-  createdAt?: string;
-  updatedAt?: string;
+  gender?: "male" | "female" | "other";
+  refreshToken?: string;
+  refreshTokenExpiresAt?: Date;
 };
+export interface UserDocument extends IUser, Document {
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}

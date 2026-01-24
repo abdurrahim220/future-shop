@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./user.interface";
+import { UserDocument } from "./user.interface";
 import bcrypt from "bcryptjs";
-const UserSchema = new Schema(
+const UserSchema = new Schema<UserDocument>(
   {
     name: {
       type: String,
@@ -16,6 +16,11 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      required: false,
     },
     password: {
       type: String,
@@ -79,4 +84,4 @@ UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (
     Math.ceil(passwordChangedAt.getTime() / 1000) > jwtIssuedAt
   );
 };
-export const UserModel = model<IUser>("User", UserSchema);
+export const UserModel = model<UserDocument>("User", UserSchema);

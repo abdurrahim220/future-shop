@@ -5,6 +5,7 @@ import { otpEmailTemplate } from "../../templates/sendOtpToEmail";
 import { generateOtp } from "../../utils/generateOtp";
 import { IUser } from "./user.interface";
 import UserRepository from "./user.repository";
+import bcrypt from "bcryptjs";
 
 class UserService {
   constructor(private userRepo: UserRepository) {}
@@ -42,7 +43,7 @@ class UserService {
 
   async findUserById(id: string) {
     if (!id) {
-      throw new AppError("Enter a valid user Id", HTTP_STATUS.NOT_FOUND);
+      throw new AppError("User not found!", HTTP_STATUS.NOT_FOUND);
     }
     return this.userRepo.findUserById(id);
   }
@@ -51,7 +52,30 @@ class UserService {
     if (!id) {
       throw new AppError("Enter a valid user Id", HTTP_STATUS.NOT_FOUND);
     }
-    return this.userRepo.updateUser(id, data);
+    const updateData = { ...data };
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+      updateData.passwordChangedAt = new Date();
+    }
+    return this.userRepo.updateUser(id, updateData);
+  }
+
+  async changeUserPassword(
+    id: string,
+    newPassword: string,
+    oldPassword: string,
+  ) {
+    const findUser = await this.userRepo.findUserById(id);
+    if (!findUser) {
+      throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    const isPasswordMatched = await findUser.comparePassword(oldPassword);
+    if (!isPasswordMatched) {
+      throw new AppError("Invalid password", HTTP_STATUS.BAD_REQUEST);
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    return this.userRepo.changeUserPassword(id, hashedPassword);
   }
 
   async deleteUser(id: string) {

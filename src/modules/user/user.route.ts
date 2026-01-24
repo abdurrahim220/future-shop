@@ -29,6 +29,11 @@ router.patch(
   zodValidate(UserValidation.verifyUserOtpZodSchema),
   userController.verifyUserOtp,
 );
+router.patch(
+  "/change-password/:id",
+  zodValidate(UserValidation.changePasswordZodSchema),
+  userController.updateUserPassword,
+);
 router.delete("/:id", userController.deleteUser);
 
 export const userRoutes = router;

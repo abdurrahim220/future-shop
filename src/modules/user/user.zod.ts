@@ -14,6 +14,7 @@ export const createUserZodSchema = z.object({
       .min(10, { message: "Phone number is required" })
       .max(15, { message: "Phone number is too long" }),
 
+    gender: z.enum(["male", "female", "other"]),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
@@ -41,9 +42,7 @@ export const updateUserZodSchema = z.object({
       name: z.string().min(2).optional(),
       email: z.email().optional(),
       phone: z.string().min(10).max(15).optional(),
-      password: z.string().min(6).optional(),
-      role: z.enum(["admin", "seller", "customer"]).optional(),
-      status: z.enum(["active", "blocked"]).optional(),
+      gender: z.enum(["male", "female", "other"]).optional(),
     })
     .strict(),
 });
@@ -59,7 +58,7 @@ export const loginUserZodSchema = z.object({
 // ── Optional: Change Password Schema
 export const changePasswordZodSchema = z.object({
   body: z.object({
-    currentPassword: z.string().min(1, "Current password is required"),
+    oldPassword: z.string().min(1, "Current password is required"),
     newPassword: z
       .string()
       .min(6, "New password must be at least 6 characters"),

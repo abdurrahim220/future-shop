@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -14,7 +15,7 @@ class UserRepository {
     return UserModel.findOne({ otp });
   }
 
-  verifyUserOtp(userId: string) {
+  verifyUserOtp(userId: Types.ObjectId) {
     return UserModel.updateOne(
       { _id: userId },
       {
@@ -22,8 +23,8 @@ class UserRepository {
           isVerified: true,
         },
         $unset: {
-          otp: undefined,
-          otpExpires: undefined,
+          otp: " ",
+          otpExpires: " ",
         },
       },
     );
@@ -35,6 +36,15 @@ class UserRepository {
 
   updateUser(id: string, data: IUser) {
     return UserModel.updateOne({ _id: id }, data);
+  }
+  changeUserPassword(userId: string, newPassword: string) {
+    return UserModel.updateOne(
+      { _id: userId },
+      {
+        password: newPassword,
+        passwordChangedAt: new Date(),
+      },
+    );
   }
 
   deleteUser(id: string) {
