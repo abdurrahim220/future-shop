@@ -5,4 +5,6 @@ export const config = {
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   ADMIN_PHONE: process.env.ADMIN_PHONE,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
 };

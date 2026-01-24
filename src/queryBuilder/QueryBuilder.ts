@@ -62,6 +62,42 @@ export class QueryBuilder<T> {
   }
 
   /**
+   * Date range filtering (ISO strings)
+   * Example:
+   * ?createdAtFrom=2026-01-01
+   * &createdAtTo=2026-01-31
+   */
+  dateRange(field: keyof T): this {
+    const from = this.query[`${String(field)}From`];
+    const to = this.query[`${String(field)}To`];
+
+    const range: Record<string, Date> = {};
+
+    if (typeof from === "string") {
+      const fromDate = new Date(from);
+      if (!Number.isNaN(fromDate.getTime())) {
+        range.$gte = fromDate;
+      }
+    }
+
+    if (typeof to === "string") {
+      const toDate = new Date(to);
+      if (!Number.isNaN(toDate.getTime())) {
+        range.$lte = toDate;
+      }
+    }
+
+    if (Object.keys(range).length > 0) {
+      this.filter = {
+        ...this.filter,
+        [field]: range,
+      } as QueryFilter<T>;
+    }
+
+    return this;
+  }
+
+  /**
    * Sorting logic
    */
   sortBy(defaultSort: Record<string, SortOrder> = { createdAt: -1 }): this {
