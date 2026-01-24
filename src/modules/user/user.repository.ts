@@ -1,10 +1,51 @@
 import { Types } from "mongoose";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
+import { QueryBuilder } from "../../queryBuilder/QueryBuilder";
 
 class UserRepository {
-  findAllUsers() {
-    return UserModel.find();
+  async findAllUsers(query: Record<string, unknown>) {
+    const qb = new QueryBuilder<IUser>(query)
+      .search(["name", "email"])
+      .filterBy(["role", "status", "isVerified"])
+      .sortBy()
+      .paginate();
+
+    const { filter, sort, skip, limit, meta } = qb.build();
+
+    const pipeline = [
+      { $match: filter },
+      {
+        $facet: {
+          data: [
+            { $sort: sort },
+            { $skip: skip },
+            { $limit: limit },
+            {
+              $project: {
+                password: 0,
+                __v: 0,
+              },
+            },
+          ],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+    ];
+
+    const result = await UserModel.aggregate(pipeline);
+
+    const items = result[0]?.data ?? [];
+    const total = result[0]?.totalCount[0]?.count ?? 0;
+
+    return {
+      items,
+      meta: {
+        ...meta,
+        total,
+        totalPages: Math.ceil(total / meta.limit),
+      },
+    };
   }
 
   createUser(data: IUser) {

@@ -37,8 +37,8 @@ class UserService {
     return this.userRepo.verifyUserOtp(findUser._id);
   }
 
-  async findAllUsers() {
-    return this.userRepo.findAllUsers();
+  async findAllUsers(query: Record<string, unknown>) {
+    return this.userRepo.findAllUsers(query);
   }
 
   async findUserById(id: string) {

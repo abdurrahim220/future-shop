@@ -18,20 +18,6 @@ export const createUserZodSchema = z.object({
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
-
-    role: z
-      .enum(["admin", "seller", "customer"], {
-        message: "Role must be one of: admin, seller, customer",
-      })
-      .default("customer")
-      .optional(),
-
-    status: z
-      .enum(["active", "blocked"], {
-        message: "Status must be active or blocked",
-      })
-      .default("active")
-      .optional(), // normally not sent during registration
   }),
 });
 
@@ -71,10 +57,36 @@ const verifyUserOtpZodSchema = z.object({
   }),
 });
 
+const getAllUsersSchema = z.object({
+  query: z.object({
+    page: z
+      .string()
+      .optional()
+      .transform(Number)
+      .refine((v) => !v || v > 0),
+
+    limit: z
+      .string()
+      .optional()
+      .transform(Number)
+      .refine((v) => !v || v > 0),
+
+    search: z.string().optional(),
+
+    role: z.enum(["admin", "customer", "seller"]).optional(),
+
+    isActive: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
   updateUserZodSchema,
   loginUserZodSchema,
   changePasswordZodSchema,
   verifyUserOtpZodSchema,
+  getAllUsersSchema,
 };
