@@ -4,6 +4,8 @@ import UserService from "./user.services";
 import UserRepository from "./user.repository";
 import zodValidate from "../../middleware/zodValidate";
 import { UserValidation } from "./user.zod";
+import auth from "../../middleware/auth";
+import { userRole } from "../../interface/Role";
 
 const router = Router();
 
@@ -24,8 +26,9 @@ router.get(
 );
 router.get("/:id", userController.getUserById);
 router.put(
-  "/:id",
+  "/",
   zodValidate(UserValidation.updateUserZodSchema),
+  auth(userRole.admin, userRole.seller, userRole.customer),
   userController.updateUser,
 );
 router.patch(

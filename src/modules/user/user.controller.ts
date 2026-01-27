@@ -1,4 +1,5 @@
 import { HTTP_STATUS } from "../../errors/httpStatus";
+import { AuditActor } from "../../interface/auditActor";
 import asyncHandler from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import UserService from "./user.services";
@@ -20,6 +21,7 @@ class UserController {
 
   verifyUserOtp = asyncHandler(async (req: Request, res: Response) => {
     const { otp } = req.body;
+
     const result = await this.userService.verifyUserOtp(otp);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
@@ -52,8 +54,16 @@ class UserController {
   });
 
   updateUser = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    await this.userService.updateUser(id as string, req.body);
+    const id = req.user?.id;
+
+    console.log(req.user);
+    const audit = req.auditContext;
+    console.log(audit);
+    await this.userService.updateUser(
+      id as string,
+      req.body,
+      audit as AuditActor,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.CREATED,
       success: true,

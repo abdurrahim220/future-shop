@@ -16,9 +16,9 @@ export class AuthService {
         HTTP_STATUS.BAD_REQUEST,
       );
     }
-    const user = await UserModel.findOne({ $or: [{ email }, { phone }] })
-      .select("+password")
-      .lean();
+    const user = await UserModel.findOne({
+      $or: [{ email }, { phone }],
+    }).select("+password");
 
     if (!user) {
       throw new AppError("Invalid user", HTTP_STATUS.NOT_FOUND);
@@ -49,8 +49,7 @@ export class AuthService {
       role: user.role,
     });
 
-    user.refreshToken = refreshToken;
-    await user.save();
+    await UserModel.updateOne({ _id: user._id }, { refreshToken });
 
     return {
       refreshToken,
@@ -74,7 +73,7 @@ export class AuthService {
       console.log(error);
       throw new AppError("Invalid refresh token", HTTP_STATUS.UNAUTHORIZED);
     }
-    const user = await UserModel.findById(decoded.id).lean();
+    const user = await UserModel.findById(decoded.id);
 
     if (!user) {
       throw new AppError("Invalid user", HTTP_STATUS.NOT_FOUND);
@@ -95,8 +94,10 @@ export class AuthService {
       role: user.role,
     });
 
-    user.refreshToken = tokens.refreshToken;
-    await user.save();
+    await UserModel.updateOne(
+      { _id: user._id },
+      { refreshToken: tokens.refreshToken },
+    );
 
     return {
       accessToken: tokens.accessToken,
@@ -112,7 +113,7 @@ export class AuthService {
       refreshToken,
       config.JWT_REFRESH_SECRET as string,
     ) as RefreshTokenPayload;
-    const user = await UserModel.findById(decoded.id).lean();
+    const user = await UserModel.findById(decoded.id);
 
     if (!user) {
       throw new AppError("Invalid user", HTTP_STATUS.NOT_FOUND);
@@ -120,8 +121,7 @@ export class AuthService {
     if (!user || user.refreshToken !== refreshToken) {
       throw new AppError("Invalid refresh token", HTTP_STATUS.UNAUTHORIZED);
     }
-    user.refreshToken = "";
-    await user.save();
+    await UserModel.updateOne({ _id: user._id }, { refreshToken: "" });
 
     return {
       accessToken: "",

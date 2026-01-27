@@ -11,6 +11,7 @@ const auth = (...requiredRoles: UserRole[]) => {
   return asyncHandler(async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
 
+    // console.log(token)
     if (!token) {
       throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
     }

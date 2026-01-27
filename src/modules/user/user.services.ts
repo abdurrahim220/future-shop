@@ -1,8 +1,12 @@
+import { Types } from "mongoose";
 import AppError from "../../errors/appError";
 import { HTTP_STATUS } from "../../errors/httpStatus";
+import { AuditActor } from "../../interface/auditActor";
 import { sendMail } from "../../services/nodeMailer";
 import { otpEmailTemplate } from "../../templates/sendOtpToEmail";
 import { generateOtp } from "../../utils/generateOtp";
+import { buildChanges } from "../auditLogs/auditLog.helper";
+import { AuditLogService } from "../auditLogs/auditLog.services";
 import { IUser } from "./user.interface";
 import UserRepository from "./user.repository";
 import bcrypt from "bcryptjs";
@@ -48,16 +52,34 @@ class UserService {
     return this.userRepo.findUserById(id);
   }
 
-  async updateUser(id: string, data: IUser) {
+  async updateUser(id: string, data: IUser, actor: AuditActor) {
     if (!id) {
       throw new AppError("Enter a valid user Id", HTTP_STATUS.NOT_FOUND);
     }
-    const updateData = { ...data };
-    if (updateData.password) {
-      updateData.password = await bcrypt.hash(data.password, 10);
-      updateData.passwordChangedAt = new Date();
+    const existingUser = await this.userRepo.findUserById(id);
+    if (!existingUser) {
+      throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
     }
-    return this.userRepo.updateUser(id, updateData);
+
+    const before = existingUser.toObject() as IUser;
+    const updateData = { ...data };
+
+    const updateUser = await this.userRepo.updateUser(id, updateData);
+
+    const changes = buildChanges(before, {
+      ...before,
+      ...updateData,
+    });
+
+    await AuditLogService.create({
+      ...(actor.userId && { userId: actor.userId }),
+      performedByRole: actor.performedByRole,
+      action: "UPDATE",
+      entityType: "USER",
+      entityId: new Types.ObjectId(id),
+      ...(changes && { changes }),
+    });
+    return updateUser;
   }
 
   async changeUserPassword(

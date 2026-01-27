@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 dotenv.config();
 import { UserModel } from "../modules/user/user.model";
@@ -18,17 +17,12 @@ const seedAdmin = async () => {
       process.exit(0);
     }
 
-    const hashedPassword = await bcrypt.hash(
-      config.ADMIN_PASSWORD as string,
-      10,
-    );
-
     // 4️⃣ Create admin user
     await UserModel.create({
       name: "Super Admin",
       email: config.ADMIN_EMAIL as string,
       phone: config.ADMIN_PHONE as string,
-      password: hashedPassword,
+      password: config.ADMIN_PASSWORD as string,
       role: "admin",
       status: "active",
       isVerified: true,
