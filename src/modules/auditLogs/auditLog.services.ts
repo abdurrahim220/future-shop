@@ -6,6 +6,7 @@ import {
   PerformedByRole,
   IAuditChange,
 } from "./auditLog.interface";
+import AuditLogRepository from "./auditLog.repository";
 
 interface CreateAuditLogParams {
   userId?: Types.ObjectId;
@@ -17,6 +18,7 @@ interface CreateAuditLogParams {
 }
 
 export class AuditLogService {
+  constructor(private auditLogRepo: AuditLogRepository) {}
   static async create(params: CreateAuditLogParams) {
     return AuditLogModel.create({
       ...(params.userId && { userId: params.userId }),
@@ -26,5 +28,9 @@ export class AuditLogService {
       entityId: params.entityId,
       ...(params.changes && { changes: params.changes }),
     });
+  }
+
+  async getAllAuditLogs(query: Record<string, unknown>) {
+    return this.auditLogRepo.findAllUsers(query);
   }
 }
