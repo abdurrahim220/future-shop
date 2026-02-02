@@ -1,5 +1,5 @@
 {
   "success": true,
   "message": "Login successful",
-  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Nzc5NzFmNWU1M2U1ZjJmMzI5YTUzNCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2OTU2NjQ3OCwiZXhwIjoxNzY5NTcwMDc4fQ.5CisInfx_xoWbBGdQc3rxKb7TSXT2C35M6-cF9y9Xmk"
+  "data": "sdasdf"
 }
