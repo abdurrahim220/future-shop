@@ -29,8 +29,13 @@ const UserSchema = new Schema<UserDocument, UserModelType>(
     },
     role: {
       type: String,
-      enum: ["admin", "seller", "customer"],
+      enum: ["admin", "seller", "customer", "super_admin"],
       default: "customer",
+    },
+    sellerRequest: {
+      type: String,
+      enum: ["pending", "approved", "rejected", "not_requested"],
+      default: "not_requested",
     },
     status: {
       type: String,

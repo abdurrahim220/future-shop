@@ -57,10 +57,17 @@ const verifyUserOtpZodSchema = z.object({
   }),
 });
 
+const requestForSellerZodSchema = z.object({
+  body: z.object({
+    sellerRequest: z.enum(["pending", "approved", "rejected", "not_requested"]),
+  }),
+});
+
 export const UserValidation = {
   createUserZodSchema,
   updateUserZodSchema,
   loginUserZodSchema,
   changePasswordZodSchema,
   verifyUserOtpZodSchema,
+  requestForSellerZodSchema,
 };

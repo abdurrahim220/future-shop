@@ -92,8 +92,11 @@ class UserRepository {
     return UserModel.updateOne({ _id: id }, data);
   }
 
-  changeUserRole(userId: string, role: Role) {
-    return UserModel.updateOne({ _id: userId }, { $set: { role } });
+  changeUserRole(userId: string, role: Role, sellerRequest?: string) {
+    return UserModel.updateOne(
+      { _id: userId },
+      { $set: { role, sellerRequest } },
+    );
   }
 
   blockUser(userId: string) {
@@ -123,6 +126,10 @@ class UserRepository {
 
   restoreUser(userId: string) {
     return UserModel.updateOne({ _id: userId }, { $set: { isDeleted: false } });
+  }
+
+  requestForSeller(userId: string, sellerRequest: string) {
+    return UserModel.updateOne({ _id: userId }, { $set: { sellerRequest } });
   }
 
   deleteUser(id: string) {

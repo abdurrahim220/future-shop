@@ -32,6 +32,7 @@ class AdminService {
     const result = await this.userRepo.changeUserRole(
       payload.userId,
       payload.role,
+      payload?.sellerRequest,
     );
     const changes = buildChanges(before, { ...before, ...updateData });
     await AuditLogService.create({

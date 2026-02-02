@@ -400,7 +400,7 @@ productId
 
 ```
 
-## 📊 BUSINESS SYSTEM
+## 📊 BUSINESS SYSTEM ✅
 - 2️⃣4️⃣ SELLER WALLET
 ```
 SellerWallet
@@ -444,3 +444,13 @@ oldValue
 newValue
 createdAt
 ```
+
+
+AdminNotification
+------------------
+_id
+type: "seller_request"
+referenceId (sellerId)
+message
+isRead
+createdAt

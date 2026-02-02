@@ -7,6 +7,17 @@ import { Request, Response } from "express";
 class SellerController {
   constructor(private sellerService: SellerService) {}
 
+  requestForSeller = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const result = await this.sellerService.requestForSeller(userId as string);
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "Seller request sent successfully",
+      data: result,
+    });
+  });
+
   createSeller = asyncHandler(async (req: Request, res: Response) => {
     const newData = req.body;
     const result = await this.sellerService.createSeller(newData);

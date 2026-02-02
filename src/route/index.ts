@@ -4,6 +4,10 @@ import { authRoute } from "../modules/auth/auth.route";
 import { auditLogsRouter } from "../modules/auditLogs/auditLog.route";
 import { adminRoutes } from "../modules/admin/admin.route";
 import { SellerWalletRoutes } from "../modules/sellerwallet/sellerwallet.route";
+import { PayoutRoutes } from "../modules/payout/payout.route";
+import { BranchesRoutes } from "../modules/branches/branches.route";
+import { AddressRoutes } from "../modules/address/address.route";
+import { SellerRoutes } from "../modules/seller/seller.route";
 
 const router = Router();
 
@@ -25,8 +29,24 @@ const moduleRoutes = [
     route: auditLogsRouter,
   },
   {
+    path: "/seller",
+    route: SellerRoutes,
+  },
+  {
     path: "/seller-wallet",
     route: SellerWalletRoutes,
+  },
+  {
+    path: "/payout",
+    route: PayoutRoutes,
+  },
+  {
+    path: "/branches",
+    route: BranchesRoutes,
+  },
+  {
+    path: "/address",
+    route: AddressRoutes,
   },
 ];
 

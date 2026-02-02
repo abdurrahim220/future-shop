@@ -4,13 +4,15 @@ import SellerService from "./seller.services";
 import SellerRepository from "./seller.repository";
 import zodValidate from "../../middleware/zodValidate";
 import { createSellerZodSchema, updateSellerZodSchema } from "./seller.zod";
+import auth from "../../middleware/auth";
 
 const router = Router();
-
+router.use(auth());
 const sellerRepository = new SellerRepository();
 const sellerService = new SellerService(sellerRepository);
 const sellerController = new SellerController(sellerService);
 
+router.post("/request", sellerController.requestForSeller);
 router.post(
   "/",
   zodValidate(createSellerZodSchema),

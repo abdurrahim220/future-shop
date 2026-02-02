@@ -14,7 +14,7 @@ const sellerSchema = new Schema<ISeller>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true, // one seller per user
+      unique: true,
       index: true,
     },
 

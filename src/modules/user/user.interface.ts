@@ -16,6 +16,7 @@ export type IUser = {
   refreshToken?: string;
   refreshTokenExpiresAt?: Date;
   isDeleted?: boolean;
+  sellerRequest?: "pending" | "approved" | "rejected" | "not_requested";
 };
 export interface UserDocument extends IUser, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
