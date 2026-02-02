@@ -2,7 +2,7 @@
 
 ## 🧩(Admin + Seller + Customer)
 
-- User Table
+- User Table ✅
 
 ```
 _id (PK)
@@ -16,14 +16,14 @@ status: "active" | "blocked"
 createdAt
 updatedAt
 ```
-- Address Table
+- Address Table ✅
 ```
 first address
 second address
 contact number
 ```
 
-- Seller Table
+- Seller Table ✅
 
 ```
 Seller

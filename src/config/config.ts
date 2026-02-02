@@ -7,4 +7,7 @@ export const config = {
   ADMIN_PHONE: process.env.ADMIN_PHONE,
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  cloudinary_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 };
