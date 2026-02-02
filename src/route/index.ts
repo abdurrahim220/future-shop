@@ -3,6 +3,7 @@ import { userRoutes } from "../modules/user/user.route";
 import { authRoute } from "../modules/auth/auth.route";
 import { auditLogsRouter } from "../modules/auditLogs/auditLog.route";
 import { adminRoutes } from "../modules/admin/admin.route";
+import { SellerWalletRoutes } from "../modules/sellerwallet/sellerwallet.route";
 
 const router = Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: "/audit-logs",
     route: auditLogsRouter,
+  },
+  {
+    path: "/seller-wallet",
+    route: SellerWalletRoutes,
   },
 ];
 

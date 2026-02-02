@@ -40,7 +40,7 @@ createdAt
 updatedAt
 ```
 
-- SELLER Table BRANCHES (Multi Branch)
+- SELLER Table BRANCHES (Multi Branch) ✅
 
 ```
 _id (PK)
@@ -48,11 +48,10 @@ sellerId (FK Seller)
 branchName
 branchCode
 type: "store" | "warehouse"
-phone
+phonenpm
 address
 city
 state
-country
 status
 createdAt
 updatedAt
@@ -432,7 +431,7 @@ updatedAt
 
 ```
 
-- 2️⃣6️⃣ AUDIT LOG
+- 2️⃣6️⃣ AUDIT LOG ✅
 ```
 AuditLog
 ----------
