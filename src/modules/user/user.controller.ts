@@ -31,17 +31,6 @@ class UserController {
     });
   });
 
-  getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.userService.findAllUsers(req.query);
-    sendResponse(res, {
-      statusCode: HTTP_STATUS.OK,
-      success: true,
-      message: "Users fetched successfully",
-      data: result.items,
-      meta: result.meta,
-    });
-  });
-
   getUserById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await this.userService.findUserById(id as string);
@@ -75,10 +64,12 @@ class UserController {
   updateUserPassword = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const { newPassword, oldPassword } = req.body;
+    const audit = req.auditContext;
     await this.userService.changeUserPassword(
       id as string,
       newPassword,
       oldPassword,
+      audit as AuditActor,
     );
     sendResponse(res, {
       statusCode: HTTP_STATUS.CREATED,
@@ -90,7 +81,8 @@ class UserController {
 
   deleteUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    await this.userService.deleteUser(id as string);
+    const audit = req.auditContext;
+    await this.userService.softDeleteUser(id as string, audit as AuditActor);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

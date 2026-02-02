@@ -59,6 +59,10 @@ const UserSchema = new Schema<UserDocument, UserModelType>(
       type: Boolean,
       default: false,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

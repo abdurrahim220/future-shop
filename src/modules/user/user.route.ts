@@ -19,11 +19,6 @@ router.post(
   userController.createUser,
 );
 
-router.get(
-  "/",
-  zodValidate(UserValidation.getAllUsersSchema),
-  userController.getAllUsers,
-);
 router.get("/:id", userController.getUserById);
 router.put(
   "/",
@@ -41,6 +36,6 @@ router.patch(
   zodValidate(UserValidation.changePasswordZodSchema),
   userController.updateUserPassword,
 );
-router.delete("/:id", userController.deleteUser);
+router.patch("/:id", userController.deleteUser);
 
 export const userRoutes = router;

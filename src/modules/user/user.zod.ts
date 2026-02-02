@@ -57,36 +57,10 @@ const verifyUserOtpZodSchema = z.object({
   }),
 });
 
-const getAllUsersSchema = z.object({
-  query: z.object({
-    page: z
-      .string()
-      .optional()
-      .transform(Number)
-      .refine((v) => !v || v > 0),
-
-    limit: z
-      .string()
-      .optional()
-      .transform(Number)
-      .refine((v) => !v || v > 0),
-
-    search: z.string().optional(),
-
-    role: z.enum(["admin", "customer", "seller"]).optional(),
-
-    isActive: z
-      .string()
-      .optional()
-      .transform((v) => v === "true"),
-  }),
-});
-
 export const UserValidation = {
   createUserZodSchema,
   updateUserZodSchema,
   loginUserZodSchema,
   changePasswordZodSchema,
   verifyUserOtpZodSchema,
-  getAllUsersSchema,
 };

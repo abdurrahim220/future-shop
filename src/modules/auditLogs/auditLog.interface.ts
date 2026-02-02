@@ -4,6 +4,11 @@ export type AuditAction =
   | "CREATE"
   | "UPDATE"
   | "DELETE"
+  | "SOFT_DELETE"
+  | "BLOCK"
+  | "UNBLOCK"
+  | "ROLE_CHANGE"
+  | "RESTORE"
   | "STATUS_CHANGE"
   | "LOGIN"
   | "LOGOUT";

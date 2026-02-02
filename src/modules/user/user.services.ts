@@ -41,10 +41,12 @@ class UserService {
     return this.userRepo.verifyUserOtp(findUser._id);
   }
 
-  async findAllUsers(query: Record<string, unknown>) {
-    return this.userRepo.findAllUsers(query);
+  getUserProfile(id: string) {
+    if (!id) {
+      throw new AppError("User not found!", HTTP_STATUS.NOT_FOUND);
+    }
+    return this.userRepo.getUserProfile(id);
   }
-
   async findUserById(id: string) {
     if (!id) {
       throw new AppError("User not found!", HTTP_STATUS.NOT_FOUND);
@@ -86,6 +88,7 @@ class UserService {
     id: string,
     newPassword: string,
     oldPassword: string,
+    actor: AuditActor,
   ) {
     const findUser = await this.userRepo.findUserById(id);
     if (!findUser) {
@@ -96,12 +99,56 @@ class UserService {
     if (!isPasswordMatched) {
       throw new AppError("Invalid password", HTTP_STATUS.BAD_REQUEST);
     }
+    const before = findUser.toObject() as IUser;
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    return this.userRepo.changeUserPassword(id, hashedPassword);
+    const updatedUser = await this.userRepo.changeUserPassword(
+      id,
+      hashedPassword,
+    );
+    const changes = buildChanges(before, {
+      ...before,
+      ...updatedUser,
+    });
+    await AuditLogService.create({
+      ...(actor.userId && { userId: actor.userId }),
+      performedByRole: actor.performedByRole,
+      action: "UPDATE",
+      entityType: "USER",
+      entityId: new Types.ObjectId(id),
+      ...(changes && { changes }),
+    });
+    return updatedUser;
   }
 
-  async deleteUser(id: string) {
-    return this.userRepo.deleteUser(id);
+  async softDeleteUser(userId: string, actor: AuditActor) {
+    if (!userId) {
+      throw new AppError("User ID is required", HTTP_STATUS.NOT_FOUND);
+    }
+    const findUser = await this.userRepo.findUserById(userId);
+    if (!findUser) {
+      throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
+    }
+    if (findUser.isDeleted) {
+      throw new AppError("User is already deleted", HTTP_STATUS.BAD_REQUEST);
+    }
+    const before = findUser.toObject() as IUser;
+    const result = await this.userRepo.softDeleteUser(userId);
+    const changes = buildChanges(before, { ...before, isDeleted: true });
+    await AuditLogService.create({
+      ...(actor.userId && { userId: actor.userId }),
+      performedByRole: actor.performedByRole,
+      action: "SOFT_DELETE",
+      entityType: "USER",
+      entityId: new Types.ObjectId(userId),
+      ...(changes && { changes }),
+    });
+    if (!result) {
+      throw new AppError(
+        "Failed to soft delete user",
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return result;
   }
 }
 

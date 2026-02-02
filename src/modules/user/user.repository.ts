@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 import { QueryBuilder } from "../../queryBuilder/QueryBuilder";
+import { Role } from "../../interface/Role";
 
 class UserRepository {
   async findAllUsers(query: Record<string, unknown>) {
@@ -71,6 +72,18 @@ class UserRepository {
     );
   }
 
+  getUserProfile(id: string) {
+    return UserModel.findById(id, {
+      password: 0,
+      otp: 0,
+      otpExpires: 0,
+      __v: 0,
+      isVerified: 0,
+      isDeleted: 0,
+      isBlocked: 0,
+    });
+  }
+
   findUserById(id: string) {
     return UserModel.findById(id);
   }
@@ -78,6 +91,22 @@ class UserRepository {
   updateUser(id: string, data: IUser) {
     return UserModel.updateOne({ _id: id }, data);
   }
+
+  changeUserRole(userId: string, role: Role) {
+    return UserModel.updateOne({ _id: userId }, { $set: { role } });
+  }
+
+  blockUser(userId: string) {
+    return UserModel.updateOne(
+      { _id: userId },
+      { $set: { status: "blocked" } },
+    );
+  }
+
+  unblockUser(userId: string) {
+    return UserModel.updateOne({ _id: userId }, { $set: { status: "active" } });
+  }
+
   changeUserPassword(userId: string, newPassword: string) {
     return UserModel.updateOne(
       { _id: userId },
@@ -86,6 +115,14 @@ class UserRepository {
         passwordChangedAt: new Date(),
       },
     );
+  }
+
+  softDeleteUser(userId: string) {
+    return UserModel.updateOne({ _id: userId }, { $set: { isDeleted: true } });
+  }
+
+  restoreUser(userId: string) {
+    return UserModel.updateOne({ _id: userId }, { $set: { isDeleted: false } });
   }
 
   deleteUser(id: string) {

@@ -15,6 +15,7 @@ export type IUser = {
   gender?: "male" | "female" | "other";
   refreshToken?: string;
   refreshTokenExpiresAt?: Date;
+  isDeleted?: boolean;
 };
 export interface UserDocument extends IUser, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
