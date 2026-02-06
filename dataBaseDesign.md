@@ -446,7 +446,7 @@ createdAt
 ```
 
 
-AdminNotification
+AdminNotification ✅
 ------------------
 _id
 type: "seller_request"

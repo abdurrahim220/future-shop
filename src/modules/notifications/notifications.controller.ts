@@ -30,7 +30,9 @@ class NotificationsController {
 
   getNotificationsById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.notificationsService.findNotificationsById(id as string);
+    const result = await this.notificationsService.findNotificationsById(
+      id as string,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -41,7 +43,10 @@ class NotificationsController {
 
   updateNotifications = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.notificationsService.updateNotifications(id as string, req.body);
+    const result = await this.notificationsService.updateNotifications(
+      id as string,
+      req.body,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -52,7 +57,9 @@ class NotificationsController {
 
   deleteNotifications = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.notificationsService.deleteNotifications(id as string);
+    const result = await this.notificationsService.deleteNotifications(
+      id as string,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

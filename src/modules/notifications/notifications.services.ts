@@ -16,14 +16,20 @@ class NotificationsService {
 
   async findNotificationsById(id: string) {
     if (!id) {
-      throw new AppError("Enter a valid notifications Id", HTTP_STATUS.NOT_FOUND);
+      throw new AppError(
+        "Enter a valid notifications Id",
+        HTTP_STATUS.NOT_FOUND,
+      );
     }
     return this.notificationsRepo.findNotificationsById(id);
   }
 
   async updateNotifications(id: string, data: Partial<INotifications>) {
     if (!id) {
-      throw new AppError("Enter a valid notifications Id", HTTP_STATUS.NOT_FOUND);
+      throw new AppError(
+        "Enter a valid notifications Id",
+        HTTP_STATUS.NOT_FOUND,
+      );
     }
     return this.notificationsRepo.updateNotifications(id, data);
   }
