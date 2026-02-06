@@ -8,6 +8,7 @@ import { PayoutRoutes } from "../modules/payout/payout.route";
 import { BranchesRoutes } from "../modules/branches/branches.route";
 import { AddressRoutes } from "../modules/address/address.route";
 import { SellerRoutes } from "../modules/seller/seller.route";
+import { BrandsRoutes } from "../modules/brands/brands.route";
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: "/address",
     route: AddressRoutes,
+  },
+  {
+    path: "/brands",
+    route: BrandsRoutes,
   },
 ];
 

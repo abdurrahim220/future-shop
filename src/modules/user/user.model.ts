@@ -94,7 +94,7 @@ UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (
     Math.ceil(passwordChangedAt.getTime() / 1000) > jwtIssuedAt
   );
 };
-UserSchema.index({ email: 1 });
+
 UserSchema.index({ name: 1 });
 UserSchema.index({ role: 1 });
 UserSchema.index({ createdAt: -1 });

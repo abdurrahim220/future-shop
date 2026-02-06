@@ -34,10 +34,14 @@ const brandsSchema = new Schema<IBrands>(
     isActive: {
       type: Boolean,
       default: true,
+      index: true,
     },
   },
   { timestamps: true },
 );
+
+brandsSchema.index({ name: "text" });
+brandsSchema.index({ isActive: 1 });
 
 brandsSchema.pre("save", function () {
   if (this.isModified("name")) {

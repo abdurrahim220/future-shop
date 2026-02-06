@@ -8,7 +8,7 @@ import { Request, Response } from "express";
 class BrandsController {
   constructor(private brandsService: BrandsService) {}
 
-  createBrfands = asyncHandler(async (req: Request, res: Response) => {
+  createBrands = asyncHandler(async (req: Request, res: Response) => {
     const newData = req.body;
     const file = req.file;
     if (!file) {
@@ -24,12 +24,12 @@ class BrandsController {
     });
   });
 
-  getAllBrandss = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.brandsService.findAllBrandss();
+  getAllBrands = asyncHandler(async (req: Request, res: Response) => {
+    const result = await this.brandsService.findAllBrands(req.query);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
-      message: "Brandss fetched successfully",
+      message: "Brands fetched successfully",
       data: result,
     });
   });

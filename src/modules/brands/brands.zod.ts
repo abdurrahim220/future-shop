@@ -6,6 +6,29 @@ export const createBrandsZodSchema = z.object({
   }),
 });
 
+export const brandSearchZodSchema = z.object({
+  query: z.object({
+    page: z
+      .string()
+      .optional()
+      .transform(Number)
+      .refine((v) => !v || v > 0),
+
+    limit: z
+      .string()
+      .optional()
+      .transform(Number)
+      .refine((v) => !v || v > 0),
+
+    search: z.string().optional(),
+
+    isActive: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
+  }),
+});
+
 export const updateBrandsZodSchema = z.object({
   body: z.object({
     name: z.string().optional(),

@@ -8,19 +8,14 @@ class BrandsService {
   constructor(private brandsRepo: BrandsRepository) {}
 
   async createBrands(payload: IBrands, buffer: Buffer) {
-    const { logo } = payload;
-    if (!logo) {
-      throw new AppError("Logo is required", HTTP_STATUS.BAD_REQUEST);
-    }
-
     const { images, public_id } = await uploadToCloudinary(buffer, "Brands");
     payload.logo = images;
     payload.public_id = public_id;
     return this.brandsRepo.createBrands(payload);
   }
 
-  async findAllBrandss() {
-    return this.brandsRepo.findAllBrandss();
+  async findAllBrands(query: Record<string, unknown>) {
+    return this.brandsRepo.findAllBrands(query);
   }
 
   async findBrandsById(id: string) {
