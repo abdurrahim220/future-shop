@@ -30,6 +30,7 @@ router.get(
 router.get("/:id", brandsController.getBrandsById);
 router.put(
   "/:id",
+  upload.single("logo"),
   zodValidate(updateBrandsZodSchema),
   brandsController.updateBrands,
 );

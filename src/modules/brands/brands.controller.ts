@@ -47,9 +47,12 @@ class BrandsController {
 
   updateBrands = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
+    const file = req?.file;
+    const buffer = file?.buffer;
     const result = await this.brandsService.updateBrands(
       id as string,
       req.body,
+      buffer,
     );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,

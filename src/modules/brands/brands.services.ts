@@ -1,6 +1,10 @@
 import AppError from "../../errors/appError";
 import { HTTP_STATUS } from "../../errors/httpStatus";
-import { uploadToCloudinary } from "../../utils/ cloudinaryHelper";
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from "../../utils/ cloudinaryHelper";
+import generateSlug from "../../utils/generateSlug";
 import { IBrands } from "./brands.interface";
 import BrandsRepository from "./brands.repository";
 
@@ -25,14 +29,42 @@ class BrandsService {
     return this.brandsRepo.findBrandsById(id);
   }
 
-  async updateBrands(id: string, data: Partial<IBrands>) {
+  async updateBrands(id: string, data: Partial<IBrands>, buffer?: Buffer) {
     if (!id) {
       throw new AppError("Enter a valid brands Id", HTTP_STATUS.NOT_FOUND);
     }
+    const existingBrand = await this.brandsRepo.findBrandsById(id);
+    if (!existingBrand) {
+      throw new AppError("Brand not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    if (buffer) {
+      if (existingBrand.public_id) {
+        await deleteFromCloudinary(existingBrand.public_id);
+      }
+      const { images, public_id } = await uploadToCloudinary(buffer, "Brands");
+      data.logo = images;
+      data.public_id = public_id;
+    }
+
+    if (data.name) {
+      data.slug = generateSlug(data.name);
+    }
+
     return this.brandsRepo.updateBrands(id, data);
   }
 
   async deleteBrands(id: string) {
+    if (!id) {
+      throw new AppError("Enter a valid brands Id", HTTP_STATUS.NOT_FOUND);
+    }
+    const existingBrand = await this.brandsRepo.findBrandsById(id);
+    if (!existingBrand) {
+      throw new AppError("Brand not found", HTTP_STATUS.NOT_FOUND);
+    }
+    if (existingBrand.public_id) {
+      await deleteFromCloudinary(existingBrand.public_id);
+    }
     return this.brandsRepo.deleteBrands(id);
   }
 }
