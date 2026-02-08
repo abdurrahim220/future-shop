@@ -20,7 +20,18 @@ class SellerController {
 
   createSeller = asyncHandler(async (req: Request, res: Response) => {
     const newData = req.body;
-    const result = await this.sellerService.createSeller(newData);
+    const files = req.files as {
+      [fieldname: string]: Express.Multer.File[];
+    };
+
+    // Extract buffers from uploaded files
+    const imageBuffers = {
+      logo: files?.logo?.[0]?.buffer,
+      banner: files?.banner?.[0]?.buffer,
+      tradeLicense: files?.tradeLicense?.[0]?.buffer,
+    };
+
+    const result = await this.sellerService.createSeller(newData, imageBuffers);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -30,7 +41,7 @@ class SellerController {
   });
 
   getAllSellers = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.sellerService.findAllSellers();
+    const result = await this.sellerService.findAllSellers(req.query);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -52,9 +63,23 @@ class SellerController {
 
   updateSeller = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
+    const files = req.files as {
+      [fieldname: string]: Express.Multer.File[];
+    };
+
+    // Extract buffers from uploaded files (if any)
+    const imageBuffers = files
+      ? {
+          logo: files?.logo?.[0]?.buffer,
+          banner: files?.banner?.[0]?.buffer,
+          tradeLicense: files?.tradeLicense?.[0]?.buffer,
+        }
+      : undefined;
+
     const result = await this.sellerService.updateSeller(
       id as string,
       req.body,
+      imageBuffers,
     );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,

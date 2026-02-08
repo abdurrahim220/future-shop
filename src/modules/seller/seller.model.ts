@@ -46,7 +46,7 @@ const sellerSchema = new Schema<ISeller>(
 
     commissionPercentage: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
       max: 100,
     },

@@ -2,8 +2,9 @@ import { ISeller } from "./seller.interface";
 import { SellerModel } from "./seller.model";
 
 class SellerRepository {
-  async findAllSellers() {
-    return SellerModel.find();
+  async findAllSellers(query: Record<string, unknown>) {
+    
+    return SellerModel.find(query);
   }
 
   async createSeller(data: ISeller) {

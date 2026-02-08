@@ -1,8 +1,18 @@
 import AppError from "../../errors/appError";
 import { HTTP_STATUS } from "../../errors/httpStatus";
+import {
+  uploadMultipleImages,
+  deleteMultipleImages,
+} from "../../utils/multiImageUploadHelper";
 import { UserModel } from "../user/user.model";
 import { ISeller } from "./seller.interface";
 import SellerRepository from "./seller.repository";
+
+interface SellerImageBuffers {
+  logo?: Buffer | undefined;
+  banner?: Buffer | undefined;
+  tradeLicense?: Buffer | undefined;
+}
 
 class SellerService {
   constructor(private sellerRepo: SellerRepository) {}
@@ -37,12 +47,31 @@ class SellerService {
     );
   }
 
-  async createSeller(data: ISeller) {
+  async createSeller(data: ISeller, imageBuffers: SellerImageBuffers) {
+    // Upload all provided images
+    const uploadResults = await uploadMultipleImages(imageBuffers, "sellers");
+
+    // Assign uploaded images to seller data
+    if (uploadResults.logo) {
+      data.logo = uploadResults.logo.images;
+      data.logoPublicId = uploadResults.logo.publicId;
+    }
+
+    if (uploadResults.banner) {
+      data.banner = uploadResults.banner.images;
+      data.bannerPublicId = uploadResults.banner.publicId;
+    }
+
+    if (uploadResults.tradeLicense) {
+      data.tradeLicense = uploadResults.tradeLicense.images;
+      data.tradeLicensePublicId = uploadResults.tradeLicense.publicId;
+    }
+
     return this.sellerRepo.createSeller(data);
   }
 
-  async findAllSellers() {
-    return this.sellerRepo.findAllSellers();
+  async findAllSellers(query: Record<string, unknown>) {
+    return this.sellerRepo.findAllSellers(query);
   }
 
   async findSellerById(id: string) {
@@ -52,14 +81,81 @@ class SellerService {
     return this.sellerRepo.findSellerById(id);
   }
 
-  async updateSeller(id: string, data: Partial<ISeller>) {
+  async updateSeller(
+    id: string,
+    data: Partial<ISeller>,
+    imageBuffers?: SellerImageBuffers,
+  ) {
     if (!id) {
       throw new AppError("Enter a valid seller Id", HTTP_STATUS.NOT_FOUND);
     }
+
+    const existingSeller = await this.sellerRepo.findSellerById(id);
+    if (!existingSeller) {
+      throw new AppError("Seller not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    // Handle image updates if buffers are provided
+    if (imageBuffers) {
+      const uploadResults = await uploadMultipleImages(imageBuffers, "sellers");
+
+      // Update logo if provided
+      if (uploadResults.logo) {
+        // Delete old logo if exists
+        if (existingSeller.logoPublicId) {
+          await deleteMultipleImages({
+            logoPublicId: existingSeller.logoPublicId,
+          });
+        }
+        data.logo = uploadResults.logo.images;
+        data.logoPublicId = uploadResults.logo.publicId;
+      }
+
+      // Update banner if provided
+      if (uploadResults.banner) {
+        // Delete old banner if exists
+        if (existingSeller.bannerPublicId) {
+          await deleteMultipleImages({
+            bannerPublicId: existingSeller.bannerPublicId,
+          });
+        }
+        data.banner = uploadResults.banner.images;
+        data.bannerPublicId = uploadResults.banner.publicId;
+      }
+
+      // Update trade license if provided
+      if (uploadResults.tradeLicense) {
+        // Delete old trade license if exists
+        if (existingSeller.tradeLicensePublicId) {
+          await deleteMultipleImages({
+            tradeLicensePublicId: existingSeller.tradeLicensePublicId,
+          });
+        }
+        data.tradeLicense = uploadResults.tradeLicense.images;
+        data.tradeLicensePublicId = uploadResults.tradeLicense.publicId;
+      }
+    }
+
     return this.sellerRepo.updateSeller(id, data);
   }
 
   async deleteSeller(id: string) {
+    if (!id) {
+      throw new AppError("Enter a valid seller Id", HTTP_STATUS.NOT_FOUND);
+    }
+
+    const existingSeller = await this.sellerRepo.findSellerById(id);
+    if (!existingSeller) {
+      throw new AppError("Seller not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    // Delete all images from Cloudinary
+    await deleteMultipleImages({
+      logoPublicId: existingSeller.logoPublicId,
+      bannerPublicId: existingSeller.bannerPublicId,
+      tradeLicensePublicId: existingSeller.tradeLicensePublicId,
+    });
+
     return this.sellerRepo.deleteSeller(id);
   }
 }
