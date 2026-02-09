@@ -12,6 +12,7 @@ interface SellerImageBuffers {
   logo?: Buffer | undefined;
   banner?: Buffer | undefined;
   tradeLicense?: Buffer | undefined;
+  [key: string]: Buffer | undefined;
 }
 
 class SellerService {
@@ -47,7 +48,11 @@ class SellerService {
     );
   }
 
-  async createSeller(data: ISeller, imageBuffers: SellerImageBuffers) {
+  async createSeller(
+    data: ISeller,
+    imageBuffers: SellerImageBuffers,
+    userId: string,
+  ) {
     // Upload all provided images
     const uploadResults = await uploadMultipleImages(imageBuffers, "sellers");
 
@@ -66,6 +71,7 @@ class SellerService {
       data.tradeLicense = uploadResults.tradeLicense.images;
       data.tradeLicensePublicId = uploadResults.tradeLicense.publicId;
     }
+    data.userId = userId;
 
     return this.sellerRepo.createSeller(data);
   }
@@ -103,9 +109,7 @@ class SellerService {
       if (uploadResults.logo) {
         // Delete old logo if exists
         if (existingSeller.logoPublicId) {
-          await deleteMultipleImages({
-            logoPublicId: existingSeller.logoPublicId,
-          });
+          await deleteMultipleImages({ id: existingSeller.logoPublicId });
         }
         data.logo = uploadResults.logo.images;
         data.logoPublicId = uploadResults.logo.publicId;
@@ -115,9 +119,7 @@ class SellerService {
       if (uploadResults.banner) {
         // Delete old banner if exists
         if (existingSeller.bannerPublicId) {
-          await deleteMultipleImages({
-            bannerPublicId: existingSeller.bannerPublicId,
-          });
+          await deleteMultipleImages({ id: existingSeller.bannerPublicId });
         }
         data.banner = uploadResults.banner.images;
         data.bannerPublicId = uploadResults.banner.publicId;
@@ -128,7 +130,7 @@ class SellerService {
         // Delete old trade license if exists
         if (existingSeller.tradeLicensePublicId) {
           await deleteMultipleImages({
-            tradeLicensePublicId: existingSeller.tradeLicensePublicId,
+            id: existingSeller.tradeLicensePublicId,
           });
         }
         data.tradeLicense = uploadResults.tradeLicense.images;
@@ -151,9 +153,9 @@ class SellerService {
 
     // Delete all images from Cloudinary
     await deleteMultipleImages({
-      logoPublicId: existingSeller.logoPublicId,
-      bannerPublicId: existingSeller.bannerPublicId,
-      tradeLicensePublicId: existingSeller.tradeLicensePublicId,
+      logo: existingSeller.logoPublicId,
+      banner: existingSeller.bannerPublicId,
+      tradeLicense: existingSeller.tradeLicensePublicId,
     });
 
     return this.sellerRepo.deleteSeller(id);

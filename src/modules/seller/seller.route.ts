@@ -10,9 +10,10 @@ import {
 } from "./seller.zod";
 import auth from "../../middleware/auth";
 import upload from "../../middleware/uploadMiddleware";
+import { userRole } from "../../interface/Role";
 
 const router = Router();
-router.use(auth());
+router.use(auth(userRole.seller));
 const sellerRepository = new SellerRepository();
 const sellerService = new SellerService(sellerRepository);
 const sellerController = new SellerController(sellerService);

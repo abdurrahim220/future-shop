@@ -20,6 +20,7 @@ class SellerController {
 
   createSeller = asyncHandler(async (req: Request, res: Response) => {
     const newData = req.body;
+    const userId = req.user?.id;
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[];
     };
@@ -31,7 +32,7 @@ class SellerController {
       tradeLicense: files?.tradeLicense?.[0]?.buffer,
     };
 
-    const result = await this.sellerService.createSeller(newData, imageBuffers);
+    const result = await this.sellerService.createSeller(newData, imageBuffers, userId as string);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

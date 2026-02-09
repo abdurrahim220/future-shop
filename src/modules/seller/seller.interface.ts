@@ -8,7 +8,7 @@ export interface IImageSet {
 }
 
 export interface ISeller {
-  userId: Types.ObjectId;
+  userId: string | Types.ObjectId;
 
   shopName: string;
 
@@ -20,7 +20,7 @@ export interface ISeller {
   tradeLicense?: IImageSet;
   tradeLicensePublicId?: string;
 
-  address: Types.ObjectId;
+  address: string | Types.ObjectId;
 
   commissionPercentage: number;
 

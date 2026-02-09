@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const createSellerZodSchema = z.object({
   body: z.object({
-    userId: z.string().min(1, { message: "User id is required" }),
     shopName: z.string().min(2, { message: "Shop name is required" }),
   }),
 });
