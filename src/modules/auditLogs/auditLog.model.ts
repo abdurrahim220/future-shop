@@ -18,14 +18,26 @@ const auditLogSchema = new Schema<IAuditLog>(
 
     action: {
       type: String,
-      enum: ["CREATE", "UPDATE", "DELETE", "STATUS_CHANGE", "LOGIN", "LOGOUT"],
+      enum: [
+        "CREATE",
+        "UPDATE",
+        "DELETE",
+        "SOFT_DELETE",
+        "BLOCK",
+        "UNBLOCK",
+        "ROLE_CHANGE",
+        "RESTORE",
+        "STATUS_CHANGE",
+        "LOGIN",
+        "LOGOUT",
+      ],
       required: true,
       index: true,
     },
 
     entityType: {
       type: String,
-      enum: ["USER", "SELLER", "ORDER", "PRODUCT"],
+      enum: ["USER", "SELLER", "ORDER", "PRODUCT", "CATEGORY", "BRAND"],
       required: true,
       index: true,
     },

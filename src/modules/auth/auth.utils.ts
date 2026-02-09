@@ -9,7 +9,7 @@ export const generateTokens = (payload: AuthPayload) => {
       role: payload.role,
     },
     config.JWT_SECRET as string,
-    { expiresIn: "1h" },
+    { expiresIn: "2h" },
   );
 
   const refreshToken = jwt.sign(

@@ -13,6 +13,7 @@ class AdminService {
   async findAllUsers(query: Record<string, unknown>) {
     return this.userRepo.findAllUsers(query);
   }
+  
   async changeUserRole(payload: IAdminUserRole, actor: AuditActor) {
     if (!payload.userId) {
       throw new AppError("User ID is required", HTTP_STATUS.NOT_FOUND);

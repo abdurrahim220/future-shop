@@ -4,8 +4,11 @@ const changeUserRoleZodSchema = z.object({
   body: z.object({
     userId: z.string({ message: "User ID is required" }),
     role: z.enum(["admin", "customer", "seller"], { message: "Invalid role" }),
+    sellerRequest: z.enum(["pending", "approved", "rejected", "not_requested"], { message: "Invalid seller request" }).optional(),
   }),
 });
+
+
 const getAllUsersSchema = z.object({
   query: z.object({
     page: z
@@ -30,6 +33,8 @@ const getAllUsersSchema = z.object({
       .transform((v) => v === "true"),
   }),
 });
+
+
 export const AdminValidation = {
   changeUserRoleZodSchema,
   getAllUsersSchema,

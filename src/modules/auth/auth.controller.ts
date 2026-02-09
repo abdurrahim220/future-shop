@@ -8,6 +8,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   login = asyncHandler(async (req: Request, res: Response) => {
+    // console.log("hit")
     const result = await this.authService.login(req.body);
 
     res.cookie("refreshToken", result.refreshToken, {

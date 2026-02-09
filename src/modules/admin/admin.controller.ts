@@ -17,6 +17,7 @@ class AdminController {
       meta: result.meta,
     });
   });
+
   changeUserRole = asyncHandler(async (req: Request, res: Response) => {
     const audit = req.auditContext;
     const result = await this.adminService.changeUserRole(
