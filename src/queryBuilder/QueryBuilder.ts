@@ -51,9 +51,17 @@ export class QueryBuilder<T> {
   filterBy(allowedFields: (keyof T)[]): this {
     Object.entries(this.query).forEach(([key, value]) => {
       if (allowedFields.includes(key as keyof T) && value !== undefined) {
+        // Convert string "true"/"false" to actual booleans
+        let filterValue: unknown = value;
+        if (value === "true") {
+          filterValue = true;
+        } else if (value === "false") {
+          filterValue = false;
+        }
+
         this.filter = {
           ...this.filter,
-          [key]: value,
+          [key]: filterValue,
         } as QueryFilter<T>;
       }
     });
