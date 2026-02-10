@@ -13,7 +13,6 @@ const categoriesSchema = new Schema<ICategories>(
     },
     slug: {
       type: String,
-      required: true,
       trim: true,
       index: true,
     },

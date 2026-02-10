@@ -9,9 +9,11 @@ import {
   updateCategoriesZodSchema,
 } from "./categories.zod";
 import upload from "../../middleware/uploadMiddleware";
+import auth from "../../middleware/auth";
+import { userRole } from "../../interface/Role";
 
 const router = Router();
-
+router.use(auth(userRole.seller, userRole.admin));
 const categoriesRepository = new CategoriesRepository();
 const categoriesService = new CategoriesService(categoriesRepository);
 const categoriesController = new CategoriesController(categoriesService);
