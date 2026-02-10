@@ -59,7 +59,7 @@ updatedAt
 
 ## 🛍️ PRODUCT SYSTEM
 
-- CATEGORIES (Tree Support)
+- CATEGORIES (Tree Support) ✅
 
 ```
 _id (PK)
@@ -72,7 +72,7 @@ createdAt
 updatedAt
 ```
 
-- BRANDS
+- BRANDS ✅
 
 ```
 _id (PK)

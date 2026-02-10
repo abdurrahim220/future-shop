@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
-import { IBrands } from "./brands.interface";
-import generateSlug from "../../utils/generateSlug";
+import { ICategories } from "./categories.interface";
 import { imageSchema } from "../../interface/imageSchema";
+import generateSlug from "../../utils/generateSlug";
 
-const brandsSchema = new Schema<IBrands>(
+const categoriesSchema = new Schema<ICategories>(
   {
     name: {
       type: String,
@@ -13,17 +13,19 @@ const brandsSchema = new Schema<IBrands>(
     },
     slug: {
       type: String,
+      required: true,
       trim: true,
-      unique: true,
       index: true,
     },
-    logo: {
+    parentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Categories",
+    },
+    icon: {
       type: imageSchema,
-      required: true,
     },
     public_id: {
       type: String,
-      required: true,
     },
     isActive: {
       type: Boolean,
@@ -34,13 +36,17 @@ const brandsSchema = new Schema<IBrands>(
   { timestamps: true },
 );
 
-brandsSchema.index({ name: "text" });
-brandsSchema.index({ isActive: 1 });
+categoriesSchema.index({ name: "text" });
+categoriesSchema.index({ slug: "text" });
 
-brandsSchema.pre("save", function () {
+categoriesSchema.index({ isActive: 1 });
+
+categoriesSchema.pre("save", function () {
   if (this.isModified("name")) {
     this.slug = generateSlug(this.name);
   }
 });
-
-export const BrandsModel = model<IBrands>("Brands", brandsSchema);
+export const CategoriesModel = model<ICategories>(
+  "Categories",
+  categoriesSchema,
+);

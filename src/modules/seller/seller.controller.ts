@@ -32,7 +32,11 @@ class SellerController {
       tradeLicense: files?.tradeLicense?.[0]?.buffer,
     };
 
-    const result = await this.sellerService.createSeller(newData, imageBuffers, userId as string);
+    const result = await this.sellerService.createSeller(
+      newData,
+      imageBuffers,
+      userId as string,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

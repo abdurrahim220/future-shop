@@ -3,7 +3,6 @@ import { SellerModel } from "./seller.model";
 
 class SellerRepository {
   async findAllSellers(query: Record<string, unknown>) {
-    
     return SellerModel.find(query);
   }
 
