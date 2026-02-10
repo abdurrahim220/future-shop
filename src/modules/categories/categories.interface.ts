@@ -6,12 +6,13 @@ export interface IImageSet {
   original?: string;
 }
 export interface ICategories {
-  _id?: string | Types.ObjectId;
+  _id?: Types.ObjectId;
   name: string;
   slug: string;
-  parentId?: string | Types.ObjectId;
+  parentId?: Types.ObjectId;
   icon: IImageSet;
   public_id: string;
+  isFeatured: boolean;
   isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;

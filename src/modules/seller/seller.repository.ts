@@ -1,3 +1,4 @@
+import { SellerRequestStatus } from "../../interface/allstatus";
 import { ISeller } from "./seller.interface";
 import { SellerModel } from "./seller.model";
 
@@ -16,6 +17,11 @@ class SellerRepository {
 
   async updateSeller(id: string, data: Partial<ISeller>) {
     return SellerModel.updateOne({ _id: id }, data);
+  }
+
+  async updateSellerRequest(id: string, status: SellerRequestStatus) {
+    // console.log(id, status);
+    return SellerModel.updateOne({ _id: id }, { status: status });
   }
 
   async deleteSeller(id: string) {

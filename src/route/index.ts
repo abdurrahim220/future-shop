@@ -9,6 +9,7 @@ import { BranchesRoutes } from "../modules/branches/branches.route";
 import { AddressRoutes } from "../modules/address/address.route";
 import { SellerRoutes } from "../modules/seller/seller.route";
 import { BrandsRoutes } from "../modules/brands/brands.route";
+import { CategoriesRoutes } from "../modules/categories/categories.route";
 
 const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: "/brands",
     route: BrandsRoutes,
+  },
+  {
+    path: "/categories",
+    route: CategoriesRoutes,
   },
 ];
 

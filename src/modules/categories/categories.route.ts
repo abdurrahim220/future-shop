@@ -4,6 +4,7 @@ import CategoriesService from "./categories.services";
 import CategoriesRepository from "./categories.repository";
 import zodValidate from "../../middleware/zodValidate";
 import {
+  categoriesQueryZodSchema,
   createCategoriesZodSchema,
   updateCategoriesZodSchema,
 } from "./categories.zod";
@@ -21,7 +22,11 @@ router.post(
   zodValidate(createCategoriesZodSchema),
   categoriesController.createCategories,
 );
-router.get("/", categoriesController.getAllCategoriess);
+router.get(
+  "/",
+  zodValidate(categoriesQueryZodSchema),
+  categoriesController.getAllCategoriess,
+);
 router.get("/:id", categoriesController.getCategoriesById);
 router.put(
   "/:id",

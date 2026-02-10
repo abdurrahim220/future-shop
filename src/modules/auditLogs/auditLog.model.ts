@@ -30,6 +30,7 @@ const auditLogSchema = new Schema<IAuditLog>(
         "STATUS_CHANGE",
         "LOGIN",
         "LOGOUT",
+        "SELLER_REQUEST",
       ],
       required: true,
       index: true,

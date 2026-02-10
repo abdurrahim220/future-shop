@@ -55,8 +55,8 @@ class CategoriesService {
       data.icon = images;
       data.public_id = public_id;
     }
-    if(data.name){
-      data.slug = generateSlug(data.name)
+    if (data.name) {
+      data.slug = generateSlug(data.name);
     }
     return this.categoriesRepo.updateCategories(id, data);
   }

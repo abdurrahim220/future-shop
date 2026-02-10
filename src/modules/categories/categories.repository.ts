@@ -5,8 +5,8 @@ import { CategoriesModel } from "./categories.model";
 class CategoriesRepository {
   async findAllCategoriess(query: Record<string, unknown>) {
     const qb = new QueryBuilder<ICategories>(query)
-      .search(["name"])
-      .filterBy(["isActive"])
+      .search(["name", "slug"])
+      .filterBy(["isActive", "isFeatured"])
       .sortBy()
       .paginate();
     const { filter, sort, skip, limit, meta } = qb.build();
@@ -31,7 +31,7 @@ class CategoriesRepository {
         },
       },
     ];
-    const result = await CategoriesModel.aggregate(pipeline as any);
+    const result = await CategoriesModel.aggregate(pipeline);
     const items = result[0]?.data ?? [];
     const total = result[0]?.totalCount[0]?.count ?? 0;
     return {

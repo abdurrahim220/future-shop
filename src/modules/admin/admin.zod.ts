@@ -12,6 +12,17 @@ const changeUserRoleZodSchema = z.object({
   }),
 });
 
+const updateSellerRequestZodSchema = z.object({
+  body: z.object({
+    sellerId: z.string({ message: "User ID is required" }),
+    sellerRequest: z
+      .enum(["pending", "approved", "rejected", "suspended"], {
+        message: "Invalid seller request",
+      })
+      .optional(),
+  }),
+});
+
 const getAllUsersSchema = z.object({
   query: z.object({
     page: z
@@ -39,5 +50,6 @@ const getAllUsersSchema = z.object({
 
 export const AdminValidation = {
   changeUserRoleZodSchema,
+  updateSellerRequestZodSchema,
   getAllUsersSchema,
 };

@@ -27,6 +27,11 @@ const categoriesSchema = new Schema<ICategories>(
     public_id: {
       type: String,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -40,6 +45,7 @@ categoriesSchema.index({ name: "text" });
 categoriesSchema.index({ slug: "text" });
 
 categoriesSchema.index({ isActive: 1 });
+categoriesSchema.index({ isFeatured: 1 });
 
 categoriesSchema.pre("save", function () {
   if (this.isModified("name")) {

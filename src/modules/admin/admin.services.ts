@@ -6,10 +6,16 @@ import { buildChanges } from "../auditLogs/auditLog.helper";
 import { AuditLogService } from "../auditLogs/auditLog.services";
 import { IUser } from "../user/user.interface";
 import UserRepository from "../user/user.repository";
-import { IAdminUserRole } from "./admin.interface";
+import { IAdminUserRole, IUpdateSellerRequest } from "./admin.interface";
+
+import SellerRepository from "../seller/seller.repository";
+import { ISeller } from "../seller/seller.interface";
 
 class AdminService {
-  constructor(private userRepo: UserRepository) {}
+  constructor(
+    private userRepo: UserRepository,
+    private sellerRepo: SellerRepository,
+  ) {}
   async findAllUsers(query: Record<string, unknown>) {
     return this.userRepo.findAllUsers(query);
   }
@@ -47,6 +53,41 @@ class AdminService {
     if (!result) {
       throw new AppError(
         "Failed to change user role",
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return result;
+  }
+
+  async updateSellerRequest(payload: IUpdateSellerRequest, actor: AuditActor) {
+    const findSeller = await this.sellerRepo.findSellerById(payload.sellerId);
+    if (!findSeller) {
+      throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    const before = findSeller.toObject() as ISeller;
+    const result = await this.sellerRepo.updateSellerRequest(
+      payload.sellerId,
+      payload.sellerRequest,
+    );
+    const changes = buildChanges(
+      before as unknown as Record<string, unknown>,
+      {
+        ...before,
+        status: payload.sellerRequest,
+      } as Record<string, unknown>,
+    );
+    await AuditLogService.create({
+      ...(actor.userId && { userId: actor.userId }),
+      performedByRole: actor.performedByRole,
+      action: "SELLER_REQUEST",
+      entityType: "SELLER",
+      entityId: new Types.ObjectId(payload.sellerId),
+      ...(changes && { changes }),
+    });
+    if (!result) {
+      throw new AppError(
+        "Failed to approve seller request",
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }

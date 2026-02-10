@@ -32,6 +32,20 @@ class AdminController {
     });
   });
 
+  updateSellerRequest = asyncHandler(async (req: Request, res: Response) => {
+    const audit = req.auditContext;
+    const result = await this.adminService.updateSellerRequest(
+      req.body,
+      audit as AuditActor,
+    );
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "Seller request updated successfully",
+      data: result,
+    });
+  });
+
   blockUser = asyncHandler(async (req: Request, res: Response) => {
     const audit = req.auditContext;
     const result = await this.adminService.blockUser(

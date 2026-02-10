@@ -11,7 +11,8 @@ export type AuditAction =
   | "RESTORE"
   | "STATUS_CHANGE"
   | "LOGIN"
-  | "LOGOUT";
+  | "LOGOUT"
+  | "SELLER_REQUEST";
 
 export type EntityType = "USER" | "SELLER" | "ORDER" | "PRODUCT";
 
