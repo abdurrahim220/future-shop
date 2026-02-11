@@ -475,3 +475,24 @@ referenceId (sellerId)
 message
 isRead
 createdAt
+
+
+
+StockMovement
+--------------
+_id
+branchId
+sellerId
+productId
+variantId
+type:
+  "initial"
+| "online_order"
+| "pos_sale"
+| "return"
+| "adjustment"
+| "transfer_in"
+| "transfer_out"
+quantity
+referenceId
+createdAt
