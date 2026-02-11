@@ -84,6 +84,27 @@ createdAt
 updatedAt
 ```
 
+
+Attribute ✅
+---------
+_id
+name: "Color"
+slug: "color"
+type: "image" | "text" | "number"
+isActive
+
+
+AttributeValue ✅
+---------------
+_id
+attributeId: Color
+value: "Red"
+hexCode?: "#FF0000"
+image?: null   // base / default image (optional)
+sortOrder
+isActive
+
+
 - PRODUCTS
 
 ```
@@ -97,7 +118,7 @@ sku
 stock
 description
 images[]
-isVariable (boolean)
+isVariants (boolean)
 variants:[
   {
     _id (PK)
@@ -365,7 +386,7 @@ priority
 isActive
 ```
 
-- 2️⃣2️⃣ BANNERS
+- 2️⃣2️⃣ BANNERS ✅
 
 ```
 Banner
