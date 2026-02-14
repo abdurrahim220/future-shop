@@ -1,15 +1,24 @@
 import { HTTP_STATUS } from "../../errors/httpStatus";
 import asyncHandler from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import ProductService from "./product.services";
+import { ProductService } from "./product.services";
 import { Request, Response } from "express";
+import AppError from "../../errors/appError";
 
 class ProductController {
-  constructor(private productService: ProductService) {}
+  private productService: ProductService;
+
+  constructor() {
+    this.productService = new ProductService();
+  }
 
   createProduct = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
     const newData = req.body;
-    const result = await this.productService.createProduct(newData);
+    const sellerId = req.user.id;
+    const result = await this.productService.createProduct(sellerId, newData);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -19,7 +28,10 @@ class ProductController {
   });
 
   getAllProducts = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.productService.findAllProducts();
+    // If user is seller, return only their products, otherwise all products
+    const sellerId =
+      req.user && req.user.role === "seller" ? req.user.id : undefined;
+    const result = await this.productService.findAllProducts(sellerId);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -40,9 +52,14 @@ class ProductController {
   });
 
   updateProduct = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
     const { id } = req.params;
+    const sellerId = req.user.id;
     const result = await this.productService.updateProduct(
       id as string,
+      sellerId,
       req.body,
     );
     sendResponse(res, {
@@ -53,16 +70,46 @@ class ProductController {
     });
   });
 
-  deleteProduct = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const result = await this.productService.deleteProduct(id as string);
+  createVariant = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
+    const { productId } = req.params;
+    const sellerId = req.user.id;
+    const newData = req.body;
+    const result = await this.productService.createVariant(
+      productId as string,
+      sellerId,
+      newData,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
-      message: "Product deleted successfully",
+      message: "Variant created successfully",
+      data: result,
+    });
+  });
+
+  bulkCreateVariants = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
+    const { productId } = req.params;
+    const sellerId = req.user.id;
+    const newData = req.body;
+    const result = await this.productService.bulkCreateVariants(
+      productId as string,
+      sellerId,
+      newData,
+    );
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "Variants created successfully",
       data: result,
     });
   });
 }
 
-export default ProductController;
+const productController = new ProductController();
+export default productController;

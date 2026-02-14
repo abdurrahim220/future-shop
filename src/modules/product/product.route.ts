@@ -1,28 +1,46 @@
 import { Router } from "express";
-import ProductController from "./product.controller";
-import ProductService from "./product.services";
-import ProductRepository from "./product.repository";
 import zodValidate from "../../middleware/zodValidate";
-import { createProductSchema } from "./product.zod";
+import {
+  bulkCreateVariantsSchema,
+  createProductSchema,
+  createVariantSchema,
+  updateProductSchema,
+} from "./product.zod";
+import productController from "./product.controller";
+import auth from "../../middleware/auth";
+import { userRole } from "../../interface/Role";
 
 const router = Router();
 
-const productRepository = new ProductRepository();
-const productService = new ProductService(productRepository);
-const productController = new ProductController(productService);
+// Public routes
+router.get("/", productController.getAllProducts);
+router.get("/:id", productController.getProductById);
 
+// Protected routes (Seller only)
 router.post(
   "/",
+  auth(userRole.seller),
   zodValidate(createProductSchema),
   productController.createProduct,
 );
-router.get("/", productController.getAllProducts);
-router.get("/:id", productController.getProductById);
+
 router.put(
   "/:id",
-  zodValidate(upda),
+  auth(userRole.seller),
+  zodValidate(updateProductSchema),
   productController.updateProduct,
 );
-router.delete("/:id", productController.deleteProduct);
 
-export const ProductRoutes = router;
+router.post(
+  "/:productId/variants",
+  auth(userRole.seller),
+  zodValidate(createVariantSchema),
+  productController.createVariant,
+);
+
+router.post(
+  "/:productId/variants/bulk",
+  auth(userRole.seller),
+  zodValidate(bulkCreateVariantsSchema),
+  productController.bulkCreateVariants,
+);

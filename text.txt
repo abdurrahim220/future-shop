@@ -1,5 +1,18 @@
-{
-  "success": true,
-  "message": "Login successful",
-  "data": "sdasdf"
+import mongoose, { Types } from "mongoose";
+import slugify from "slugify";
+import { ProductRepository } from "./product.repository";
+
+interface UpdateProductPayload {
+  name?: string;
+  description?: string;
+  categoryId?: string;
+  brandId?: string;
+  hasVariants?: boolean;
+  attributeIds?: string[];
 }
+
+export class ProductService {
+  private repo = new ProductRepository();
+
+}
+ 
