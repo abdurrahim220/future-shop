@@ -12,6 +12,7 @@ import {
 import AppError from "../../errors/appError";
 import { HTTP_STATUS } from "../../errors/httpStatus";
 import { generateVariantsFromCombinations } from "./product.variant.generator";
+import { generateSku } from "../../utils/generateSku";
 
 export class ProductService {
   private repo = new ProductRepository();
@@ -26,7 +27,7 @@ export class ProductService {
         categoryId: new Types.ObjectId(payload.categoryId),
         brandId: new Types.ObjectId(payload.brandId),
         name: payload.name,
-        sku: `P-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Generate simple unique SKU
+        sku: generateSku(), // Generate simple unique SKU
         slug: slugify(payload.name, { lower: true, strict: true }),
         hasVariants: payload.hasVariants,
         attributeIds: payload.hasVariants
@@ -56,7 +57,7 @@ export class ProductService {
         await this.repo.createVariant(
           {
             productId: createdProduct._id,
-            sku: `SKU-${Date.now()}`,
+            sku: generateSku(),
             purchasePrice: 0,
             salePrice: 0,
             images: [],
@@ -127,7 +128,7 @@ export class ProductService {
 
       const variantPayload: IProductVariant = {
         productId: new Types.ObjectId(productId),
-        sku: payload.sku,
+        sku: generateSku(),
         purchasePrice: payload.purchasePrice,
         salePrice: payload.salePrice,
         images: payload.images,
@@ -185,7 +186,7 @@ export class ProductService {
 
       const variantsToCreate: IProductVariant[] = variantsData.map((v) => ({
         productId: v.productId,
-        sku: `SKU-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+        sku: generateSku(),
         purchasePrice: payload.basePrice,
         salePrice: payload.baseSalePrice,
         images: [], // Can be updated later

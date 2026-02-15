@@ -105,7 +105,7 @@ sortOrder
 isActive
 
 
-- PRODUCTS
+- PRODUCTS ✅
 
 ```
 _id (PK)
@@ -143,7 +143,7 @@ updatedAt
 
 ## 📦 INVENTORY & STOCK (Branch Based)
 
-- BRANCH INVENTORY ⚠️ IMPORTANT
+- BRANCH INVENTORY ⚠️ IMPORTANT ✅
 
 ```
 _id (PK)
@@ -155,7 +155,7 @@ reorderLevel
 updatedAt
 ```
 
-- STOCK MOVEMENT (Stock Ledger)
+- STOCK MOVEMENT (Stock Ledger) ✅
 
 ```
 _id (PK)
@@ -174,21 +174,21 @@ createdAt
 ```
 StockTransfer
 ---------------
-_id (PK)
+_id
+sellerId
 fromBranchId
 toBranchId
 status: "pending" | "completed"
+items: [
+  {
+    productId
+    variantId
+    quantity
+  }
+]
 createdAt
+updatedAt
 
-StockTransferItem
--------------------
-_id (PK)
-transferId
-productId
-variantId
-quantity
-createdAt
-```
 
 ## 🛒 CART
 
@@ -478,7 +478,7 @@ createdAt
 
 
 
-StockMovement
+StockMovement ✅
 --------------
 _id
 branchId
