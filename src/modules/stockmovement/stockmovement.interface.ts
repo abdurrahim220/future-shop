@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { stockMovementEnum } from "../../interface/enums";
 
 export interface IStockMovement {
   _id: string;
@@ -6,14 +7,7 @@ export interface IStockMovement {
   sellerId: Types.ObjectId;
   productId: Types.ObjectId;
   variantId: Types.ObjectId;
-  type:
-    | "initial"
-    | "online_order"
-    | "pos_sale"
-    | "return"
-    | "adjustment"
-    | "transfer_in"
-    | "transfer_out";
+  type: stockMovementEnum;
   quantity: number;
   referenceId: string;
   createdAt?: Date;

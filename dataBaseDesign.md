@@ -172,7 +172,7 @@ createdAt
 - STOCK TRANSFER (Optional but Professional)
 
 ```
-StockTransfer
+StockTransfer ✅
 ---------------
 _id
 sellerId

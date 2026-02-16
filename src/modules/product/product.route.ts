@@ -44,3 +44,5 @@ router.post(
   zodValidate(bulkCreateVariantsSchema),
   productController.bulkCreateVariants,
 );
+
+export const ProductRoutes = router;

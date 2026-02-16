@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
+import { stockTransferStatusEnum } from "../../interface/enums";
 
-interface IStockTransferItem {
+export interface IStockTransferItem {
   productId: Types.ObjectId;
   variantId: Types.ObjectId;
   quantity: number;
@@ -11,7 +12,7 @@ export interface IStockTransfer {
   sellerId: Types.ObjectId;
   fromBranchId: Types.ObjectId;
   toBranchId: Types.ObjectId;
-  status: "pending" | "completed";
+  status: stockTransferStatusEnum;
   items: IStockTransferItem[];
   createdAt: Date;
   updatedAt: Date;

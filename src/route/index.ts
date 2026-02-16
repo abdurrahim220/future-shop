@@ -10,6 +10,10 @@ import { AddressRoutes } from "../modules/address/address.route";
 import { SellerRoutes } from "../modules/seller/seller.route";
 import { BrandsRoutes } from "../modules/brands/brands.route";
 import { CategoriesRoutes } from "../modules/categories/categories.route";
+import { StockMovementRoutes } from "../modules/stockmovement/stockmovement.route";
+import { BranchInventoryRoutes } from "../modules/branchinventory/branchinventory.route";
+import { ProductRoutes } from "../modules/product/product.route";
+import { StockTransferRoutes } from "../modules/stocktransfer/stocktransfer.route";
 
 const router = Router();
 
@@ -57,6 +61,22 @@ const moduleRoutes = [
   {
     path: "/categories",
     route: CategoriesRoutes,
+  },
+  {
+    path: "/products",
+    route: ProductRoutes,
+  },
+  {
+    path: "/branch-inventory",
+    route: BranchInventoryRoutes,
+  },
+  {
+    path: "/stock-movement",
+    route: StockMovementRoutes,
+  },
+  {
+    path: "/stock-transfer",
+    route: StockTransferRoutes,
   },
 ];
 
