@@ -404,7 +404,7 @@ isActive
 - 2️⃣3️⃣ CAMPAIGN / EVENT
 
 ```
-Campaign
+Campaign ✅
 -----------
 _id
 title
@@ -413,11 +413,6 @@ banner
 startDate
 endDate
 status
-
-CampaignProduct
------------------
-campaignId
-productId
 
 ```
 
