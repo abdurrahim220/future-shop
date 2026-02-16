@@ -16,7 +16,7 @@ const wishlistRepository = new WishlistRepository();
 const wishlistService = new WishlistService(wishlistRepository);
 const wishlistController = new WishlistController(wishlistService);
 
-router.use(auth(userRole.customer,userRole.admin,userRole.seller))
+router.use(auth(userRole.customer, userRole.admin, userRole.seller));
 router.post(
   "/",
   zodValidate(createWishlistZodSchema),

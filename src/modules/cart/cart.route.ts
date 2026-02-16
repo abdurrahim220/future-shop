@@ -13,7 +13,7 @@ const cartRepository = new CartRepository();
 const cartService = new CartService(cartRepository);
 const cartController = new CartController(cartService);
 
-router.use(auth(userRole.customer,userRole.admin,userRole.seller))
+router.use(auth(userRole.customer, userRole.admin, userRole.seller));
 router.post("/", zodValidate(createCartZodSchema), cartController.createCart);
 router.get("/", cartController.getAllCarts);
 router.get("/:id", cartController.getCartById);

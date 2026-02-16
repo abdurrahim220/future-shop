@@ -190,7 +190,7 @@ createdAt
 updatedAt
 
 
-## 🛒 CART
+## 🛒 CART ✅
 
 ```
 Cart
@@ -209,7 +209,7 @@ updatedAt
 
 ```
 
-## ❤️ WISHLIST
+## ❤️ WISHLIST ✅
 
 ```
 Wishlist
@@ -240,7 +240,7 @@ updatedAt
 
 ## 🧾 ORDERS SYSTEM
 
-- 1️⃣1️⃣ ORDERS
+- 1️⃣1️⃣ ORDERS ✅
 
 ```
 Order
@@ -256,9 +256,9 @@ createdAt
 updatedAt
 ```
 
-- 1️⃣2️⃣ ORDER ITEMS/subOrder // visable for seller
+- 1️⃣2️⃣ ORDER ITEMS/subOrder // visable for seller ✅
 ```
-OrderItem
+OrderItem 
 ------------
 _id
 orderId

@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ICart, ICartItem } from "./cart.interface";
 
-
 const cartItemSchema = new Schema<ICartItem>(
   {
     productId: {

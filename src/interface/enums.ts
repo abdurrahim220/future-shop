@@ -13,3 +13,21 @@ export enum stockTransferStatusEnum {
   approved = "approved",
   rejected = "rejected",
 }
+
+export enum orderStatusEnum {
+  pending = "pending",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}
+
+export enum paymentStatusEnum {
+  paid = "paid",
+  unpaid = "unpaid",
+}
+
+export enum deliveryTypeEnum {
+  home = "home",
+  cod = "cod",
+  storePickup = "storePickup",
+}
