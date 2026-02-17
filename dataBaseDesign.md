@@ -223,7 +223,7 @@ createdAt
 
 ⭐ REVIEWS
 
-```
+``` 
 Review
 --------
 _id
@@ -316,7 +316,7 @@ price
 subtotal
 ```
 
-## 🎟️ OFFERS / COUPONS / CAMPAIGNS
+## 🎟️ OFFERS / COUPONS / CAMPAIGNS ✅
 
 ```
 Offer
@@ -342,7 +342,7 @@ categoryId?
 brandId?
 ```
 
-- 1️⃣9️⃣ COUPONS
+- 1️⃣9️⃣ COUPONS ✅
 ```
 Coupon
 ---------
@@ -361,7 +361,7 @@ status
 
 - 2️⃣0️⃣ COMBO OFFERS
 ```
-ComboOffer
+ComboOffer ✅
 ------------
 _id
 title
