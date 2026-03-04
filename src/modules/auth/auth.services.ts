@@ -51,11 +51,13 @@ export class AuthService {
     });
 
     await UserModel.updateOne({ _id: user._id }, { refreshToken });
-// console.log("accessToken", accessToken);
-// console.log("refreshToken", refreshToken);
     return {
       refreshToken,
       accessToken,
+      user: {
+        id: user._id,
+        role: user.role,
+      },
     };
   }
 
@@ -104,6 +106,10 @@ export class AuthService {
     return {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      user: {
+        id: user._id,
+        role: user.role,
+      },
     };
   }
 

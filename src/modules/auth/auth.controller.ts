@@ -21,7 +21,10 @@ export class AuthController {
       statusCode: HTTP_STATUS.OK,
       success: true,
       message: "Login successful",
-      data: result.accessToken,
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
     });
   });
 
@@ -38,7 +41,10 @@ export class AuthController {
       statusCode: HTTP_STATUS.OK,
       success: true,
       message: "Refresh token successful",
-      data: result.accessToken,
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
     });
   });
 
