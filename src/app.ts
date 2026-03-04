@@ -9,7 +9,31 @@ import { populateUser } from "./middleware/populateUser";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "http://localhost:4000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5000",
+  "http://localhost:5006",
+  "http://localhost:5007",
+  "http://localhost:5008",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || origin === "null" || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
+      }
+    },
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(populateUser);

@@ -1,8 +1,7 @@
 import { Types } from "mongoose";
 
 export interface AuthLoginInput {
-  email: string;
-  phone: string;
+  identifier: string;
   password: string;
 }
 

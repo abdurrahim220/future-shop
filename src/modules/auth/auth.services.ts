@@ -8,16 +8,17 @@ import jwt from "jsonwebtoken";
 import { config } from "../../config/config";
 export class AuthService {
   async login(payload: AuthLoginInput) {
-    const { email, phone, password } = payload;
+    const { identifier, password } = payload;
 
-    if (!email && !phone) {
+    // console.log("identifier", identifier);
+    if (!identifier) {
       throw new AppError(
         "Enter your email or phone number",
         HTTP_STATUS.BAD_REQUEST,
       );
     }
     const user = await UserModel.findOne({
-      $or: [{ email }, { phone }],
+      $or: [{ email: identifier }, { phone: identifier }],
     }).select("+password");
 
     if (!user) {
@@ -50,7 +51,8 @@ export class AuthService {
     });
 
     await UserModel.updateOne({ _id: user._id }, { refreshToken });
-
+// console.log("accessToken", accessToken);
+// console.log("refreshToken", refreshToken);
     return {
       refreshToken,
       accessToken,
