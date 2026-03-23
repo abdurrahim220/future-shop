@@ -24,14 +24,9 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || origin === "null" || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
+    optionsSuccessStatus: 200,
   }),
 );
 
