@@ -19,6 +19,7 @@ const allowedOrigins = [
   "http://localhost:5006",
   "http://localhost:5007",
   "http://localhost:5008",
+  "https://future-shop-admin.vercel.app",
 ];
 
 app.use(
