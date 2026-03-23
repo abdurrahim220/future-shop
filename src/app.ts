@@ -36,7 +36,7 @@ app.use(populateUser);
 app.use(auditContext);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Server is running 🚀");
+  res.send("Server is running perfectly 🚀");
 });
 app.use("/api/v1", router);
 app.use(globalErrorHandler);
