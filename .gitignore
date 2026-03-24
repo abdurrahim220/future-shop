@@ -3,3 +3,5 @@ coverage
 .env*
 dist
 generate-module.ts
+
+github_push.sh
