@@ -10,8 +10,8 @@ class CampaignService {
     return this.campaignRepo.createCampaign(data);
   }
 
-  async findAllCampaigns() {
-    return this.campaignRepo.findAllCampaigns();
+  async findAllCampaigns(query: Record<string, unknown>) {
+    return this.campaignRepo.findAllCampaigns(query);
   }
 
   async findCampaignById(id: string) {

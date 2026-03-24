@@ -56,7 +56,7 @@ const campaignSchema = new Schema<ICampaign>(
       default: mainStatusEnum.pending,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 campaignSchema.pre("save", function () {

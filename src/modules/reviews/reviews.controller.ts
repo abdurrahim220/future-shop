@@ -41,7 +41,10 @@ class ReviewsController {
 
   updateReviews = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.reviewsService.updateReviews(id as string, req.body);
+    const result = await this.reviewsService.updateReviews(
+      id as string,
+      req.body,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

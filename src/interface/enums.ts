@@ -32,7 +32,6 @@ export enum deliveryTypeEnum {
   storePickup = "storePickup",
 }
 
-
 export enum mainStatusEnum {
   pending = "pending",
   active = "active",

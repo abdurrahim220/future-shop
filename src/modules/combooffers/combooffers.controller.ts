@@ -19,7 +19,7 @@ class ComboOffersController {
   });
 
   getAllComboOfferss = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.combooffersService.findAllComboOfferss();
+    const result = await this.combooffersService.findAllComboOfferss(req.query);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -30,7 +30,9 @@ class ComboOffersController {
 
   getComboOffersById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.combooffersService.findComboOffersById(id as string);
+    const result = await this.combooffersService.findComboOffersById(
+      id as string,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -41,7 +43,10 @@ class ComboOffersController {
 
   updateComboOffers = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.combooffersService.updateComboOffers(id as string, req.body);
+    const result = await this.combooffersService.updateComboOffers(
+      id as string,
+      req.body,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -52,7 +57,9 @@ class ComboOffersController {
 
   deleteComboOffers = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.combooffersService.deleteComboOffers(id as string);
+    const result = await this.combooffersService.deleteComboOffers(
+      id as string,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

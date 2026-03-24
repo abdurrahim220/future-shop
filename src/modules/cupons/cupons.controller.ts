@@ -19,7 +19,7 @@ class CuponsController {
   });
 
   getAllCuponss = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.cuponsService.findAllCuponss();
+    const result = await this.cuponsService.findAllCuponss(req.query);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -41,7 +41,10 @@ class CuponsController {
 
   updateCupons = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.cuponsService.updateCupons(id as string, req.body);
+    const result = await this.cuponsService.updateCupons(
+      id as string,
+      req.body,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

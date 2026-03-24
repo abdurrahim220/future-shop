@@ -10,8 +10,8 @@ class ComboOffersService {
     return this.combooffersRepo.createComboOffers(data);
   }
 
-  async findAllComboOfferss() {
-    return this.combooffersRepo.findAllComboOfferss();
+  async findAllComboOfferss(query: Record<string, unknown>) {
+    return this.combooffersRepo.findAllComboOfferss(query);
   }
 
   async findComboOffersById(id: string) {

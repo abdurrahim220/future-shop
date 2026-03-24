@@ -19,7 +19,7 @@ class CampaignController {
   });
 
   getAllCampaigns = asyncHandler(async (req: Request, res: Response) => {
-    const result = await this.campaignService.findAllCampaigns();
+    const result = await this.campaignService.findAllCampaigns(req.query);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
@@ -41,7 +41,10 @@ class CampaignController {
 
   updateCampaign = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await this.campaignService.updateCampaign(id as string, req.body);
+    const result = await this.campaignService.updateCampaign(
+      id as string,
+      req.body,
+    );
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,

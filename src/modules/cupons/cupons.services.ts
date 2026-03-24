@@ -10,8 +10,8 @@ class CuponsService {
     return this.cuponsRepo.createCupons(data);
   }
 
-  async findAllCuponss() {
-    return this.cuponsRepo.findAllCuponss();
+  async findAllCuponss(query: Record<string, unknown>) {
+    return this.cuponsRepo.findAllCuponss(query);
   }
 
   async findCuponsById(id: string) {

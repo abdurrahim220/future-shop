@@ -11,10 +11,10 @@ export interface IOrder {
   productId: Types.ObjectId;
   variantId: Types.ObjectId;
   sellerId: Types.ObjectId;
-  branchId:Types.ObjectId
-  price:number
-  quantity:number
-  subtotal:number
+  branchId: Types.ObjectId;
+  price: number;
+  quantity: number;
+  subtotal: number;
   status: orderStatusEnum;
   paymentStatus: paymentStatusEnum;
   deliveryStatus: deliveryTypeEnum;

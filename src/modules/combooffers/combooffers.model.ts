@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IComboOffers } from "./combooffers.interface";
 import { mainStatusEnum } from "../../interface/enums";
 

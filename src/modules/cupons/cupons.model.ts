@@ -48,7 +48,7 @@ const cuponsSchema = new Schema<ICupons>(
       default: mainStatusEnum.pending,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const CuponsModel = model<ICupons>("Cupons", cuponsSchema);

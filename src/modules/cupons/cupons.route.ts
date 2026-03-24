@@ -11,10 +11,18 @@ const cuponsRepository = new CuponsRepository();
 const cuponsService = new CuponsService(cuponsRepository);
 const cuponsController = new CuponsController(cuponsService);
 
-router.post("/", zodValidate(createCuponsZodSchema), cuponsController.createCupons);
+router.post(
+  "/",
+  zodValidate(createCuponsZodSchema),
+  cuponsController.createCupons,
+);
 router.get("/", cuponsController.getAllCuponss);
 router.get("/:id", cuponsController.getCuponsById);
-router.put("/:id", zodValidate(updateCuponsZodSchema), cuponsController.updateCupons);
+router.put(
+  "/:id",
+  zodValidate(updateCuponsZodSchema),
+  cuponsController.updateCupons,
+);
 router.delete("/:id", cuponsController.deleteCupons);
 
 export const CuponsRoutes = router;
