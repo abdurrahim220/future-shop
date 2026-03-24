@@ -7,3 +7,12 @@ export const createNotificationsZodSchema = z.object({
     message: z.string().min(2),
   }),
 });
+
+export const updateNotificationsZodSchema = z.object({
+  body: z.object({
+    type: z.string().min(2).optional(),
+    referenceId: z.string().min(2).optional(),
+    message: z.string().min(2).optional(),
+    isRead: z.boolean().optional(),
+  }),
+});

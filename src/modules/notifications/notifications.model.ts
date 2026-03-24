@@ -5,7 +5,7 @@ const notificationsSchema = new Schema<INotifications>(
   {
     type: {
       type: String,
-      trime: true,
+      trim: true,
     },
     referenceId: {
       type: Schema.Types.ObjectId,
