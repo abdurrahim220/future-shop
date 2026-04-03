@@ -14,3 +14,13 @@ export const userData = [
     password: "password123",
   },
 ];
+
+export const updateUserData = {
+  name: "Updated Name",
+  phone: "01811111111",
+};
+
+export const changePasswordData = {
+  oldPassword: "password123",
+  newPassword: "newpassword123",
+};

@@ -35,7 +35,6 @@ const brandsSchema = new Schema<IBrands>(
 );
 
 brandsSchema.index({ name: "text" });
-brandsSchema.index({ isActive: 1 });
 
 brandsSchema.pre("save", function () {
   if (this.isModified("name")) {

@@ -34,7 +34,6 @@ const attributeSchema = new Schema<IAttribute>(
 attributeSchema.index({ name: 1 });
 attributeSchema.index({ slug: 1 });
 attributeSchema.index({ type: 1 });
-attributeSchema.index({ isActive: 1 });
 
 attributeSchema.pre("save", function () {
   if (this.isModified("name")) {

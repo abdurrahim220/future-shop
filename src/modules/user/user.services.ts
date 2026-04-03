@@ -90,7 +90,7 @@ class UserService {
     oldPassword: string,
     actor: AuditActor,
   ) {
-    const findUser = await this.userRepo.findUserById(id);
+    const findUser = await this.userRepo.findUserByIdWithPassword(id);
     if (!findUser) {
       throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
     }

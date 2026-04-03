@@ -88,6 +88,10 @@ class UserRepository {
     return UserModel.findById(id);
   }
 
+  findUserByIdWithPassword(id: string) {
+    return UserModel.findById(id).select("+password");
+  }
+
   updateUser(id: string, data: IUser) {
     return UserModel.updateOne({ _id: id }, data);
   }

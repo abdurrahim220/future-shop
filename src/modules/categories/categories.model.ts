@@ -43,9 +43,6 @@ const categoriesSchema = new Schema<ICategories>(
 categoriesSchema.index({ name: "text" });
 categoriesSchema.index({ slug: "text" });
 
-categoriesSchema.index({ isActive: 1 });
-categoriesSchema.index({ isFeatured: 1 });
-
 categoriesSchema.pre("save", function () {
   if (this.isModified("name")) {
     this.slug = generateSlug(this.name);
