@@ -18,7 +18,7 @@ const config: Config = {
   coverageDirectory: "coverage",
 
   coverageProvider: "v8",
-  // setupFilesAfterEnv: ["<rootDir>/tests/setup/jest.setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup/jest.setup.ts"],
 };
 
 export default config;
