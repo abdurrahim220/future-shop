@@ -15,6 +15,19 @@ import { BranchInventoryRoutes } from "../modules/branchinventory/branchinventor
 import { ProductRoutes } from "../modules/product/product.route";
 import { StockTransferRoutes } from "../modules/stocktransfer/stocktransfer.route";
 
+// Newly registered modules to resolve admin integration
+import { AttributeRoutes } from "../modules/attribute/attribute.route";
+import { AttributeValueRoutes } from "../modules/attributevalue/attributevalue.route";
+import { CampaignRoutes } from "../modules/campaign/campaign.route";
+import { ComboOffersRoutes } from "../modules/combooffers/combooffers.route";
+import { CuponsRoutes } from "../modules/cupons/cupons.route";
+import { NotificationsRoutes } from "../modules/notifications/notifications.route";
+import { OrderRoutes } from "../modules/order/order.route";
+import { SubOrderRoutes } from "../modules/suborder/suborder.route";
+import { ReviewsRoutes } from "../modules/reviews/reviews.route";
+import { WishlistRoutes } from "../modules/wishlist/wishlist.route";
+import { CartRoutes } from "../modules/cart/cart.route";
+
 const router = Router();
 
 const moduleRoutes = [
@@ -67,6 +80,10 @@ const moduleRoutes = [
     route: ProductRoutes,
   },
   {
+    path: "/product",
+    route: ProductRoutes,
+  },
+  {
     path: "/branch-inventory",
     route: BranchInventoryRoutes,
   },
@@ -75,8 +92,65 @@ const moduleRoutes = [
     route: StockMovementRoutes,
   },
   {
+    path: "/stockmovement",
+    route: StockMovementRoutes,
+  },
+  {
     path: "/stock-transfer",
     route: StockTransferRoutes,
+  },
+  {
+    path: "/stocktransfer",
+    route: StockTransferRoutes,
+  },
+  {
+    path: "/branchinventory",
+    route: BranchInventoryRoutes,
+  },
+  // Mount new routes
+  {
+    path: "/attribute",
+    route: AttributeRoutes,
+  },
+  {
+    path: "/attributevalue",
+    route: AttributeValueRoutes,
+  },
+  {
+    path: "/campaign",
+    route: CampaignRoutes,
+  },
+  {
+    path: "/combooffers",
+    route: ComboOffersRoutes,
+  },
+  {
+    path: "/cupons",
+    route: CuponsRoutes,
+  },
+  {
+    path: "/notifications",
+    route: NotificationsRoutes,
+  },
+  {
+    path: "/order",
+    route: OrderRoutes,
+  },
+  {
+    path: "/suborder",
+    route: SubOrderRoutes,
+  },
+  {
+    path: "/reviews",
+    route: ReviewsRoutes,
+  },
+  {
+    path: "/wishlist",
+    route: WishlistRoutes,
+  },
+  {
+    path: "/cart",
+    route: CartRoutes,
   },
 ];
 

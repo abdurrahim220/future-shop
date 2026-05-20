@@ -13,14 +13,14 @@ import upload from "../../middleware/uploadMiddleware";
 import { userRole } from "../../interface/Role";
 
 const router = Router();
-router.use(auth(userRole.seller));
 const sellerRepository = new SellerRepository();
 const sellerService = new SellerService(sellerRepository);
 const sellerController = new SellerController(sellerService);
 
-router.post("/request", sellerController.requestForSeller);
+router.post("/request", auth(userRole.customer, userRole.seller, userRole.admin), sellerController.requestForSeller);
 router.post(
   "/",
+  auth(userRole.seller, userRole.admin),
   upload.fields([
     { name: "logo", maxCount: 1 },
     { name: "banner", maxCount: 1 },
@@ -29,10 +29,11 @@ router.post(
   zodValidate(createSellerZodSchema),
   sellerController.createSeller,
 );
-router.get("/", zodValidate(sellerZodQuery), sellerController.getAllSellers);
-router.get("/:id", sellerController.getSellerById);
+router.get("/", auth(userRole.admin, userRole.seller), zodValidate(sellerZodQuery), sellerController.getAllSellers);
+router.get("/:id", auth(userRole.admin, userRole.seller), sellerController.getSellerById);
 router.put(
   "/:id",
+  auth(userRole.admin, userRole.seller),
   upload.fields([
     { name: "logo", maxCount: 1 },
     { name: "banner", maxCount: 1 },
@@ -41,6 +42,6 @@ router.put(
   zodValidate(updateSellerZodSchema),
   sellerController.updateSeller,
 );
-router.delete("/:id", sellerController.deleteSeller);
+router.delete("/:id", auth(userRole.admin), sellerController.deleteSeller);
 
 export const SellerRoutes = router;
