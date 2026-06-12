@@ -4,7 +4,12 @@ import { generateVariantKey } from "../../utils/buildVariantKey";
 
 const productSchema = new Schema<IProduct>(
   {
-    sellerId: { type: Schema.Types.ObjectId, required: true, index: true },
+    sellerId: {
+      type: Schema.Types.ObjectId,
+      ref: "Seller",
+      required: true,
+      index: true,
+    },
     categoryId: { type: Schema.Types.ObjectId, required: true },
     brandId: { type: Schema.Types.ObjectId, required: true },
     name: { type: String, required: true },

@@ -87,6 +87,23 @@ class SellerService {
     return this.sellerRepo.findSellerById(id);
   }
 
+  async findPublicSellerById(id: string) {
+    if (!id) {
+      throw new AppError("Enter a valid seller Id", HTTP_STATUS.NOT_FOUND);
+    }
+    const seller = await this.sellerRepo.findSellerById(id);
+    if (!seller) {
+      throw new AppError("Seller not found", HTTP_STATUS.NOT_FOUND);
+    }
+    return {
+      _id: seller._id,
+      shopName: seller.shopName,
+      logo: seller.logo,
+      banner: seller.banner,
+      createdAt: seller.createdAt,
+    };
+  }
+
   async updateSeller(
     id: string,
     data: Partial<ISeller>,

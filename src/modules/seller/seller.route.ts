@@ -17,7 +17,11 @@ const sellerRepository = new SellerRepository();
 const sellerService = new SellerService(sellerRepository);
 const sellerController = new SellerController(sellerService);
 
-router.post("/request", auth(userRole.customer, userRole.seller, userRole.admin), sellerController.requestForSeller);
+router.post(
+  "/request",
+  auth(userRole.customer, userRole.seller, userRole.admin),
+  sellerController.requestForSeller,
+);
 router.post(
   "/",
   auth(userRole.seller, userRole.admin),
@@ -29,8 +33,18 @@ router.post(
   zodValidate(createSellerZodSchema),
   sellerController.createSeller,
 );
-router.get("/", auth(userRole.admin, userRole.seller), zodValidate(sellerZodQuery), sellerController.getAllSellers);
-router.get("/:id", auth(userRole.admin, userRole.seller), sellerController.getSellerById);
+router.get(
+  "/",
+  auth(userRole.admin, userRole.seller),
+  zodValidate(sellerZodQuery),
+  sellerController.getAllSellers,
+);
+router.get("/public/:id", sellerController.getPublicSellerById);
+router.get(
+  "/:id",
+  auth(userRole.admin, userRole.seller),
+  sellerController.getSellerById,
+);
 router.put(
   "/:id",
   auth(userRole.admin, userRole.seller),

@@ -1,6 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import slugify from "slugify";
 import { ProductRepository } from "./product.repository";
+import { ProductModel, ProductVariantModel } from "./product.model";
 import {
   BulkVariantCreationPayload,
   CreateProductPayload,
@@ -86,15 +87,49 @@ export class ProductService {
     if (sellerId) {
       filter.sellerId = new Types.ObjectId(sellerId);
     }
-    return this.repo.findAllProducts(filter);
+    const products = await ProductModel.find(filter)
+      .populate("categoryId")
+      .populate("brandId")
+      .populate("sellerId")
+      .lean();
+
+    const productsWithVariants = await Promise.all(
+      products.map(async (product) => {
+        const variants = await ProductVariantModel.find({
+          productId: product._id,
+        }).lean();
+        const images = Array.from(
+          new Set(variants.flatMap((v) => v.images || [])),
+        );
+        return {
+          ...product,
+          variants,
+          images,
+        };
+      }),
+    );
+
+    return productsWithVariants;
   }
 
   async findProductById(productId: string) {
-    const product = await this.repo.findById(productId);
+    const product = await ProductModel.findById(productId)
+      .populate("categoryId")
+      .populate("brandId")
+      .populate("sellerId")
+      .lean();
     if (!product) {
       throw new AppError("Product not found", HTTP_STATUS.NOT_FOUND);
     }
-    return product;
+    const variants = await ProductVariantModel.find({
+      productId: product._id,
+    }).lean();
+    const images = Array.from(new Set(variants.flatMap((v) => v.images || [])));
+    return {
+      ...product,
+      variants,
+      images,
+    };
   }
 
   async createVariant(

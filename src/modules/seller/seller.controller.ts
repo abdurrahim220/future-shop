@@ -66,6 +66,17 @@ class SellerController {
     });
   });
 
+  getPublicSellerById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await this.sellerService.findPublicSellerById(id as string);
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "Public seller info fetched successfully",
+      data: result,
+    });
+  });
+
   updateSeller = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const files = req.files as {

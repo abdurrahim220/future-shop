@@ -28,9 +28,15 @@ class ProductController {
   });
 
   getAllProducts = asyncHandler(async (req: Request, res: Response) => {
-    // If user is seller, return only their products, otherwise all products
-    const sellerId =
+    // If user is seller, return only their products.
+    // Otherwise, check if a specific sellerId is requested in query params.
+    let sellerId =
       req.user && req.user.role === "seller" ? req.user.id : undefined;
+
+    if (!sellerId && req.query.sellerId) {
+      sellerId = req.query.sellerId as string;
+    }
+
     const result = await this.productService.findAllProducts(sellerId);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
