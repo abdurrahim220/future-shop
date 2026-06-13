@@ -5,6 +5,9 @@ import { BrandsModel } from "../brands/brands.model";
 import { QueryBuilder } from "../../queryBuilder/QueryBuilder";
 import { ProductRepository } from "./product.repository";
 import { ProductModel, ProductVariantModel } from "./product.model";
+import { BranchInventoryModel } from "../branchinventory/branchinventory.model";
+import { AttributeModel } from "../attribute/attribute.model";
+import { AttributeValueModel } from "../attributevalue/attributevalue.model";
 import {
   BulkVariantCreationPayload,
   CreateProductPayload,
@@ -142,12 +145,12 @@ export class ProductService {
         const variants = await ProductVariantModel.find({
           productId: product._id,
         }).lean();
+        const populated = await this.populateProductDetail(product, variants);
         const images = Array.from(
           new Set(variants.flatMap((v) => v.images || [])),
         );
         return {
-          ...product,
-          variants,
+          ...populated,
           images,
         };
       }),
@@ -156,7 +159,7 @@ export class ProductService {
     // Apply price range filtering on variants in memory
     if (!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)) {
       productsWithVariants = productsWithVariants.filter((product) => {
-        return product.variants.some((v) => {
+        return product.variants.some((v: any) => {
           let matches = true;
           if (!Number.isNaN(minPrice) && v.salePrice < minPrice) matches = false;
           if (!Number.isNaN(maxPrice) && v.salePrice > maxPrice) matches = false;
@@ -169,14 +172,14 @@ export class ProductService {
     const sortField = typeof query.sort === "string" ? query.sort : "-createdAt";
     if (sortField === "salePrice") {
       productsWithVariants.sort((a, b) => {
-        const aPrice = a.variants.find((v) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
-        const bPrice = b.variants.find((v) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
+        const aPrice = a.variants.find((v: any) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
+        const bPrice = b.variants.find((v: any) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
         return aPrice - bPrice;
       });
     } else if (sortField === "-salePrice") {
       productsWithVariants.sort((a, b) => {
-        const aPrice = a.variants.find((v) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
-        const bPrice = b.variants.find((v) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
+        const aPrice = a.variants.find((v: any) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
+        const bPrice = b.variants.find((v: any) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
         return bPrice - aPrice;
       });
     } else if (sortField === "-createdAt") {
@@ -218,10 +221,10 @@ export class ProductService {
     const variants = await ProductVariantModel.find({
       productId: product._id,
     }).lean();
+    const populated = await this.populateProductDetail(product, variants);
     const images = Array.from(new Set(variants.flatMap((v) => v.images || [])));
     return {
-      ...product,
-      variants,
+      ...populated,
       images,
     };
   }
@@ -474,5 +477,71 @@ export class ProductService {
       throw new AppError("Variant not found", HTTP_STATUS.NOT_FOUND);
     }
     return updated;
+  }
+
+  private async populateProductDetail(product: any, variants: any[]) {
+    // 1. Fetch stock for product
+    const productInventories = await BranchInventoryModel.find({ productId: product._id }).lean();
+    const productStock = productInventories.reduce((sum, inv) => sum + (inv.stock || 0), 0);
+
+    // 2. Fetch stock for variants
+    const variantInventories = await BranchInventoryModel.find({
+      variantId: { $in: variants.map(v => v._id) }
+    }).lean();
+
+    const variantStocksMap = variantInventories.reduce((acc: any, inv) => {
+      const vId = inv.variantId.toString();
+      acc[vId] = (acc[vId] || 0) + (inv.stock || 0);
+      return acc;
+    }, {});
+
+    // 3. Extract unique attribute & attributeValue ids from all variants
+    const attrIdsSet = new Set<string>();
+    const valIdsSet = new Set<string>();
+    variants.forEach(v => {
+      v.attributeValues?.forEach((av: any) => {
+        if (av.attributeId) attrIdsSet.add(av.attributeId.toString());
+        if (av.attributeValueId) valIdsSet.add(av.attributeValueId.toString());
+      });
+    });
+
+    // Bulk query attributes and attribute values
+    const attributes = await AttributeModel.find({ _id: { $in: Array.from(attrIdsSet) } }).lean();
+    const attributeValues = await AttributeValueModel.find({ _id: { $in: Array.from(valIdsSet) } }).lean();
+
+    const attributesMap = attributes.reduce((acc: any, cur) => {
+      acc[cur._id.toString()] = cur.name;
+      return acc;
+    }, {});
+
+    const valuesMap = attributeValues.reduce((acc: any, cur) => {
+      acc[cur._id.toString()] = cur.value;
+      return acc;
+    }, {});
+
+    // 4. Map variants
+    const mappedVariants = variants.map(v => {
+      const mappedAttrs: Record<string, string> = {};
+      v.attributeValues?.forEach((av: any) => {
+        const attrName = attributesMap[av.attributeId?.toString()];
+        const valText = valuesMap[av.attributeValueId?.toString()];
+        if (attrName && valText) {
+          mappedAttrs[attrName] = valText;
+        }
+      });
+
+      return {
+        ...v,
+        stock: variantStocksMap[v._id.toString()] || 0,
+        attributes: mappedAttrs,
+      };
+    });
+
+    return {
+      ...product,
+      isVariants: product.hasVariants,
+      stock: productStock,
+      variants: mappedVariants,
+    };
   }
 }
