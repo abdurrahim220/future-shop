@@ -490,8 +490,10 @@ export class ProductService {
     }).lean();
 
     const variantStocksMap = variantInventories.reduce((acc: any, inv) => {
-      const vId = inv.variantId.toString();
-      acc[vId] = (acc[vId] || 0) + (inv.stock || 0);
+      if (inv.variantId) {
+        const vId = inv.variantId.toString();
+        acc[vId] = (acc[vId] || 0) + (inv.stock || 0);
+      }
       return acc;
     }, {});
 
