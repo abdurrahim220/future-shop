@@ -2,23 +2,23 @@ import { z } from "zod";
 
 export const createBranchesZodSchema = z.object({
   body: z.object({
-    sellerId: z.string().min(1, { message: "Seller id is required" }),
+    sellerId: z.string().min(1, { message: "Seller / Shop is required" }),
 
-    branchName: z.string().min(2, { message: "Branch name is required" }),
+    branchName: z.string().min(2, { message: "Branch name must be at least 2 characters" }),
 
-    branchCode: z.string().min(2, { message: "Branch code is required" }),
+    branchCode: z.string().min(2, { message: "Branch code must be at least 2 characters" }),
 
     type: z.enum(["store", "warehouse"], {
       message: "Invalid branch type",
     }),
 
-    phone: z.string().min(10, { message: "Phone number is required" }),
+    phone: z.string().min(10, { message: "Phone number must be at least 10 characters" }),
 
-    address: z.string().min(5, { message: "Address is required" }),
+    address: z.string().min(5, { message: "Address must be at least 5 characters" }),
 
-    city: z.string().min(2, { message: "City is required" }),
+    city: z.string().min(2, { message: "City must be at least 2 characters" }),
 
-    state: z.string().min(2, { message: "State is required" }),
+    state: z.string().min(2, { message: "State must be at least 2 characters" }),
   }),
 });
 

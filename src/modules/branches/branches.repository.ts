@@ -3,7 +3,7 @@ import { BranchesModel } from "./branches.model";
 
 class BranchesRepository {
   async findAllBranchess() {
-    return BranchesModel.find();
+    return BranchesModel.find().populate("sellerId");
   }
 
   async createBranches(data: IBranches) {
@@ -11,7 +11,7 @@ class BranchesRepository {
   }
 
   async findBranchesById(id: string) {
-    return BranchesModel.findById(id);
+    return BranchesModel.findById(id).populate("sellerId");
   }
 
   async updateBranches(id: string, data: Partial<IBranches>) {
