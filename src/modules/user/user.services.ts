@@ -18,7 +18,7 @@ class UserService {
     const otp = generateOtp();
     data.otp = Number(otp);
     data.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
-    sendMail({
+    await sendMail({
       to: data.email,
       subject: "Verify your email",
       html: otpEmailTemplate({ otp, expiresInMinutes: 10 }),

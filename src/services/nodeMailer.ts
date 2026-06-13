@@ -21,7 +21,7 @@ export const sendMail = async ({
 }: ISendMailOptions) => {
   try {
     await transporter.sendMail({
-      from: '"Future Shop" <no-reply@futureshop.com>',
+      from: '"Future Shop" <z.abdurrahim6@gmail.com>',
       to,
       subject,
       text,
