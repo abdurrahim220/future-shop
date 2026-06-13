@@ -9,6 +9,8 @@ import {
   updateBrandsZodSchema,
 } from "./brands.zod";
 import upload from "../../middleware/uploadMiddleware";
+import auth from "../../middleware/auth";
+import { userRole } from "../../interface/Role";
 
 const router = Router();
 
@@ -18,6 +20,7 @@ const brandsController = new BrandsController(brandsService);
 
 router.post(
   "/",
+  auth(userRole.seller, userRole.admin),
   upload.single("logo"),
   zodValidate(createBrandsZodSchema),
   brandsController.createBrands,
@@ -30,10 +33,11 @@ router.get(
 router.get("/:id", brandsController.getBrandsById);
 router.put(
   "/:id",
+  auth(userRole.seller, userRole.admin),
   upload.single("logo"),
   zodValidate(updateBrandsZodSchema),
   brandsController.updateBrands,
 );
-router.delete("/:id", brandsController.deleteBrands);
+router.delete("/:id", auth(userRole.seller, userRole.admin), brandsController.deleteBrands);
 
 export const BrandsRoutes = router;

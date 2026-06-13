@@ -1,5 +1,8 @@
 import mongoose, { Types } from "mongoose";
 import slugify from "slugify";
+import { CategoriesModel } from "../categories/categories.model";
+import { BrandsModel } from "../brands/brands.model";
+import { QueryBuilder } from "../../queryBuilder/QueryBuilder";
 import { ProductRepository } from "./product.repository";
 import { ProductModel, ProductVariantModel } from "./product.model";
 import {
@@ -34,7 +37,7 @@ export class ProductService {
         attributeIds: payload.hasVariants
           ? (payload.attributeIds?.map((id) => new Types.ObjectId(id)) ?? [])
           : [],
-        status: "draft",
+        status: "active",
       };
 
       if (payload.description) {
@@ -82,18 +85,59 @@ export class ProductService {
     }
   }
 
-  async findAllProducts(sellerId?: string) {
-    const filter: Record<string, unknown> = {};
+  async findAllProducts(query: Record<string, unknown>, sellerId?: string) {
+    const qb = new QueryBuilder<IProduct>(query)
+      .search(["name", "description"])
+      .filterBy(["categoryId", "brandId", "status"]);
+
+    const { filter } = qb.build();
+
+    // Default status to active for storefront client queries (which don't pass status)
+    if (!filter.status && !sellerId) {
+      filter.status = "active";
+    }
+
     if (sellerId) {
       filter.sellerId = new Types.ObjectId(sellerId);
     }
+
+    // Convert string categoryId or brandId to ObjectId if they exist (supporting slugs as well)
+    if (filter.categoryId && typeof filter.categoryId === "string") {
+      if (mongoose.Types.ObjectId.isValid(filter.categoryId)) {
+        filter.categoryId = new Types.ObjectId(filter.categoryId);
+      } else {
+        const cat = await CategoriesModel.findOne({ slug: filter.categoryId }).lean();
+        if (cat) {
+          filter.categoryId = cat._id;
+        } else {
+          // Fallback dummy ObjectId to prevent empty string matching all products
+          filter.categoryId = new Types.ObjectId();
+        }
+      }
+    }
+    if (filter.brandId && typeof filter.brandId === "string") {
+      if (mongoose.Types.ObjectId.isValid(filter.brandId)) {
+        filter.brandId = new Types.ObjectId(filter.brandId);
+      } else {
+        const brand = await BrandsModel.findOne({ slug: filter.brandId }).lean();
+        if (brand) {
+          filter.brandId = brand._id;
+        } else {
+          filter.brandId = new Types.ObjectId();
+        }
+      }
+    }
+
+    const minPrice = Number(query.minPrice);
+    const maxPrice = Number(query.maxPrice);
+
     const products = await ProductModel.find(filter)
       .populate("categoryId")
       .populate("brandId")
       .populate("sellerId")
       .lean();
 
-    const productsWithVariants = await Promise.all(
+    let productsWithVariants = await Promise.all(
       products.map(async (product) => {
         const variants = await ProductVariantModel.find({
           productId: product._id,
@@ -109,7 +153,57 @@ export class ProductService {
       }),
     );
 
-    return productsWithVariants;
+    // Apply price range filtering on variants in memory
+    if (!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)) {
+      productsWithVariants = productsWithVariants.filter((product) => {
+        return product.variants.some((v) => {
+          let matches = true;
+          if (!Number.isNaN(minPrice) && v.salePrice < minPrice) matches = false;
+          if (!Number.isNaN(maxPrice) && v.salePrice > maxPrice) matches = false;
+          return matches;
+        });
+      });
+    }
+
+    // Sort by price or default to newest
+    const sortField = typeof query.sort === "string" ? query.sort : "-createdAt";
+    if (sortField === "salePrice") {
+      productsWithVariants.sort((a, b) => {
+        const aPrice = a.variants.find((v) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
+        const bPrice = b.variants.find((v) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
+        return aPrice - bPrice;
+      });
+    } else if (sortField === "-salePrice") {
+      productsWithVariants.sort((a, b) => {
+        const aPrice = a.variants.find((v) => v.isDefault)?.salePrice || a.variants[0]?.salePrice || 0;
+        const bPrice = b.variants.find((v) => v.isDefault)?.salePrice || b.variants[0]?.salePrice || 0;
+        return bPrice - aPrice;
+      });
+    } else if (sortField === "-createdAt") {
+      productsWithVariants.sort((a, b) => {
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
+    }
+
+    // Paginate in memory
+    const page = typeof query.page === "string" && Number(query.page) > 0 ? Number(query.page) : 1;
+    const limit = typeof query.limit === "string" && Number(query.limit) > 0 ? Number(query.limit) : 20;
+    const skip = (page - 1) * limit;
+
+    const items = productsWithVariants.slice(skip, skip + limit);
+    const total = productsWithVariants.length;
+
+    return {
+      items,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPage: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findProductById(productId: string) {
@@ -360,5 +454,25 @@ export class ProductService {
       session.endSession();
       throw error;
     }
+  }
+
+  async updateVariant(
+    productId: string,
+    variantId: string,
+    sellerId: string,
+    payload: Partial<IProductVariant>,
+  ) {
+    const product = await this.repo.findByIdAndSeller(productId, sellerId);
+    if (!product) {
+      throw new AppError(
+        "Product not found or unauthorized",
+        HTTP_STATUS.NOT_FOUND,
+      );
+    }
+    const updated = await this.repo.updateVariant(variantId, payload);
+    if (!updated) {
+      throw new AppError("Variant not found", HTTP_STATUS.NOT_FOUND);
+    }
+    return updated;
   }
 }

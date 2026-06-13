@@ -2,6 +2,7 @@ import AppError from "../../errors/appError";
 import { HTTP_STATUS } from "../../errors/httpStatus";
 import { IAttribute } from "./attribute.interface";
 import AttributeRepository from "./attribute.repository";
+import { ProductModel } from "../product/product.model";
 
 class AttributeService {
   constructor(private attributeRepo: AttributeRepository) {}
@@ -29,6 +30,26 @@ class AttributeService {
   }
 
   async deleteAttribute(id: string) {
+    if (!id) {
+      throw new AppError("Enter a valid attribute Id", HTTP_STATUS.NOT_FOUND);
+    }
+    const existingAttribute = await this.attributeRepo.findAttributeById(id);
+    if (!existingAttribute) {
+      throw new AppError("Attribute not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    // Check if attribute is linked to any active product
+    const isLinkedToActiveProduct = await ProductModel.findOne({
+      attributeIds: id,
+      status: "active",
+    });
+    if (isLinkedToActiveProduct) {
+      throw new AppError(
+        "Cannot delete attribute because it is linked to one or more active products.",
+        HTTP_STATUS.BAD_REQUEST,
+      );
+    }
+
     return this.attributeRepo.deleteAttribute(id);
   }
 }

@@ -29,6 +29,7 @@ import { WishlistRoutes } from "../modules/wishlist/wishlist.route";
 import { CartRoutes } from "../modules/cart/cart.route";
 import { BkashRoutes } from "../modules/bkash/bkash.route";
 import { BannerRoutes } from "../modules/banner/banner.route";
+import { UploadRoutes } from "../modules/upload/upload.route";
 
 const router = Router();
 
@@ -161,6 +162,10 @@ const moduleRoutes = [
   {
     path: "/banner",
     route: BannerRoutes,
+  },
+  {
+    path: "/upload",
+    route: UploadRoutes,
   },
 ];
 

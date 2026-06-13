@@ -37,12 +37,13 @@ class ProductController {
       sellerId = req.query.sellerId as string;
     }
 
-    const result = await this.productService.findAllProducts(sellerId);
+    const result = await this.productService.findAllProducts(req.query, sellerId);
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
       message: "Products fetched successfully",
-      data: result,
+      data: result.items,
+      meta: result.meta,
     });
   });
 
@@ -112,6 +113,26 @@ class ProductController {
       statusCode: HTTP_STATUS.OK,
       success: true,
       message: "Variants created successfully",
+      data: result,
+    });
+  });
+
+  updateVariant = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
+    const { productId, variantId } = req.params;
+    const sellerId = req.user.id;
+    const result = await this.productService.updateVariant(
+      productId as string,
+      variantId as string,
+      sellerId,
+      req.body,
+    );
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: "Variant updated successfully",
       data: result,
     });
   });

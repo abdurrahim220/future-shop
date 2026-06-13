@@ -17,6 +17,8 @@ export interface IProduct {
   hasVariants: boolean;
   attributeIds: Types.ObjectId[];
   status: "draft" | "pending" | "active";
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface IProductVariant {

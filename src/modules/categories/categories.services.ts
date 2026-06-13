@@ -7,6 +7,7 @@ import {
 import generateSlug from "../../utils/generateSlug";
 import { ICategories } from "./categories.interface";
 import CategoriesRepository from "./categories.repository";
+import { ProductModel } from "../product/product.model";
 
 class CategoriesService {
   constructor(private categoriesRepo: CategoriesRepository) {}
@@ -69,6 +70,19 @@ class CategoriesService {
     if (!existingCategory) {
       throw new AppError("Category not found", HTTP_STATUS.NOT_FOUND);
     }
+
+    // Check if category is linked to any active product
+    const isLinkedToActiveProduct = await ProductModel.findOne({
+      categoryId: id,
+      status: "active",
+    });
+    if (isLinkedToActiveProduct) {
+      throw new AppError(
+        "Cannot delete category because it is linked to one or more active products.",
+        HTTP_STATUS.BAD_REQUEST,
+      );
+    }
+
     if (existingCategory.public_id) {
       await deleteFromCloudinary(existingCategory.public_id);
     }

@@ -45,4 +45,10 @@ router.post(
   productController.bulkCreateVariants,
 );
 
+router.put(
+  "/:productId/variants/:variantId",
+  auth(userRole.seller),
+  productController.updateVariant,
+);
+
 export const ProductRoutes = router;

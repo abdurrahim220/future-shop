@@ -7,6 +7,7 @@ import {
 import generateSlug from "../../utils/generateSlug";
 import { IBrands } from "./brands.interface";
 import BrandsRepository from "./brands.repository";
+import { ProductModel } from "../product/product.model";
 
 class BrandsService {
   constructor(private brandsRepo: BrandsRepository) {}
@@ -62,6 +63,19 @@ class BrandsService {
     if (!existingBrand) {
       throw new AppError("Brand not found", HTTP_STATUS.NOT_FOUND);
     }
+
+    // Check if brand is linked to any active product
+    const isLinkedToActiveProduct = await ProductModel.findOne({
+      brandId: id,
+      status: "active",
+    });
+    if (isLinkedToActiveProduct) {
+      throw new AppError(
+        "Cannot delete brand because it is linked to one or more active products.",
+        HTTP_STATUS.BAD_REQUEST,
+      );
+    }
+
     if (existingBrand.public_id) {
       await deleteFromCloudinary(existingBrand.public_id);
     }

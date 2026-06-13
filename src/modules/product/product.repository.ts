@@ -61,4 +61,13 @@ export class ProductRepository {
   findVariantKeys(productId: string) {
     return ProductVariantModel.find({ productId }, { variantKey: 1 }).lean();
   }
+
+  updateVariant(
+    variantId: string,
+    updateData: Partial<IProductVariant>,
+    session?: ClientSession,
+  ) {
+    const options = session ? { new: true, session } : { new: true };
+    return ProductVariantModel.findByIdAndUpdate(variantId, updateData, options);
+  }
 }
