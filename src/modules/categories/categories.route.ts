@@ -13,29 +13,37 @@ import auth from "../../middleware/auth";
 import { userRole } from "../../interface/Role";
 
 const router = Router();
-router.use(auth(userRole.seller, userRole.admin));
 const categoriesRepository = new CategoriesRepository();
 const categoriesService = new CategoriesService(categoriesRepository);
 const categoriesController = new CategoriesController(categoriesService);
 
-router.post(
-  "/",
-  upload.single("icon"),
-  zodValidate(createCategoriesZodSchema),
-  categoriesController.createCategories,
-);
+// Public routes
 router.get(
   "/",
   zodValidate(categoriesQueryZodSchema),
   categoriesController.getAllCategoriess,
 );
 router.get("/:id", categoriesController.getCategoriesById);
+
+// Protected routes (Seller / Admin only)
+router.post(
+  "/",
+  auth(userRole.seller, userRole.admin),
+  upload.single("icon"),
+  zodValidate(createCategoriesZodSchema),
+  categoriesController.createCategories,
+);
 router.put(
   "/:id",
+  auth(userRole.seller, userRole.admin),
   upload.single("icon"),
   zodValidate(updateCategoriesZodSchema),
   categoriesController.updateCategories,
 );
-router.delete("/:id", categoriesController.deleteCategories);
+router.delete(
+  "/:id",
+  auth(userRole.seller, userRole.admin),
+  categoriesController.deleteCategories,
+);
 
 export const CategoriesRoutes = router;
